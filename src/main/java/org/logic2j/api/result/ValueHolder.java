@@ -1,10 +1,8 @@
 package org.logic2j.api.result;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public interface ValueHolder<T> extends Iterable<T> {
 
@@ -34,7 +32,9 @@ public interface ValueHolder<T> extends Iterable<T> {
 
     List<T> list();
 
-    Set<T> set();
+    default Set<T> set() {
+        return addTo(new HashSet<T>());
+    }
 
     /**
      * Collect solutions into a user-specified Collection
@@ -42,11 +42,18 @@ public interface ValueHolder<T> extends Iterable<T> {
      * @param theTargetToAddTo The target collection (with user-chosen semantics) where all solutions should be added to.
      * @return the argument "theTargetToAddTo"
      */
-    <R extends Collection<T>> R addTo(R theTargetToAddTo);
+    default <R extends Collection<T>> R addTo(R theTargetToAddTo) {
+        theTargetToAddTo.addAll(list());
+        return theTargetToAddTo;
+    }
 
-    Stream<T> stream();
+    default Stream<T> stream() {
+        return StreamSupport.stream(spliterator(), false);
+    }
 
-    <T> T[] array(T[] destinationArray);
+    default <T> T[] array(T[] destinationArray) {
+        return list().toArray(destinationArray);
+    }
 
     Iterator<T> iterator();
 
@@ -66,9 +73,12 @@ public interface ValueHolder<T> extends Iterable<T> {
 
     // Aggregation
 
-    T min();
+    default Optional<T> min(Comparator<? super T> comparator) {
+        return stream().min(comparator);
+    }
 
-    T max();
+    default Optional<T> max(Comparator<? super T> comparator) {
+        return stream().max(comparator);
+    }
 
-    T sum();
 }

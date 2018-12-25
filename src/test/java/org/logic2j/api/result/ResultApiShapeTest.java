@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.logic2j.test.domain.MyDTO;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.logic2j.engine.model.Var.*;
@@ -70,12 +71,7 @@ public class ResultApiShapeTest {
 
     @Test
     public void min() {
-        final Double min = solve().var(doubleVar()).min();
-    }
-
-    @Test
-    public void sum() {
-        final Integer sum = solve().var(intVar()).sum();
+        final Optional<Double> min = solve().var(doubleVar()).min(Double::compareTo);
     }
 
 
