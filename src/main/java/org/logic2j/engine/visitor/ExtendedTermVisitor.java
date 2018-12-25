@@ -27,21 +27,21 @@ import org.logic2j.engine.model.TermApi;
  */
 public interface ExtendedTermVisitor<T> extends TermVisitor<T> {
 
-  /**
-   * Extra visiting method for String, because often String need special handling,
-   * for example in a visitor to marshall a Term, quoting needs to be done.
-   *
-   * @param theAtomString
-   * @return
-   */
-  T visit(String theAtomString);
+    /**
+     * Extra visiting method for String, because often String need special handling,
+     * for example in a visitor to marshall a Term, quoting needs to be done.
+     *
+     * @param theAtomString
+     * @return
+     */
+    T visit(String theAtomString);
 
-  /**
-   * The "fallback" method on Object will be invoked if no other more specific visit() method
-   * could be found.
-   *
-   * @param theObject
-   * @return
-   */
-  T visit(Object theObject);
+    /**
+     * The "fallback" method on Object will be invoked if no other more specific visit() method
+     * could be found.
+     *
+     * @param theObject
+     * @return
+     */
+    T visit(Object theObject);
 }

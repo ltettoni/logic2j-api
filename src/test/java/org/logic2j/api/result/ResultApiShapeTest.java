@@ -1,10 +1,8 @@
 package org.logic2j.api.result;
 
 import org.junit.Test;
-import org.logic2j.engine.model.Var;
 import org.logic2j.test.domain.MyDTO;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -68,7 +66,6 @@ public class ResultApiShapeTest {
     }
 
 
-
     @Test
     public void min() {
         final Double min = solve().var(doubleVar()).min();
@@ -93,9 +90,6 @@ public class ResultApiShapeTest {
     public void projectSingleValue() {
         final String single = solve().var(strVar()).single();
     }
-
-
-
 
 
     // Helper

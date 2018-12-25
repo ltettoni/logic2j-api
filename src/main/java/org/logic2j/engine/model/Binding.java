@@ -25,9 +25,9 @@ package org.logic2j.engine.model;
  */
 public interface Binding<T> {
 
-  /**
-   * @return The type of the bound values.
-   */
-  Class<T> getType();
+    /**
+     * @return The type of the bound values.
+     */
+    Class<T> getType();
 
 }

@@ -22,13 +22,13 @@ package org.logic2j.engine.model;
  * enhanced-featured {@link TermApi} instances.
  */
 public class TermApiLocator {
-  private TermApiLocator() {
-  }
+    private static final TermApi termApi = new TermApi();
 
-  private static final TermApi termApi = new TermApi();
+    private TermApiLocator() {
+    }
 
-  public static TermApi termApi() {
-    return termApi;
-  }
+    public static TermApi termApi() {
+        return termApi;
+    }
 
 }

@@ -13,19 +13,26 @@ public interface ValueHolder<T> {
     Set<T> set();
 
     ValueHolder<T> exactly(int nbFirst);
+
     ValueHolder<T> atMost(int nbFirst);
+
     ValueHolder<T> atLeast(int nbFirst);
+
     ValueHolder<T> limit(int nbFirst);
+
     ValueHolder<T> page(int first, int number);
 
     ValueHolder<T> distinct();
 
     T min();
+
     T max();
 
 
     T single();
+
     T first();
+
     T unique();
 
 
