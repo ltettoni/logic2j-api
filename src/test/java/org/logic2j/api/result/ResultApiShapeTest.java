@@ -1,41 +1,105 @@
 package org.logic2j.api.result;
 
 import org.junit.Test;
+import org.logic2j.engine.model.Var;
+import org.logic2j.test.domain.MyDTO;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
-import static org.logic2j.engine.model.Var.strVar;
+import static org.logic2j.engine.model.Var.*;
 
 public class ResultApiShapeTest {
 
+    // Results
+
     @Test
     public void existence() {
-        boolean b = solve().exists();
+        final boolean exists = solve().exists();
     }
 
     @Test
     public void cardinalityOne() {
-        boolean one = solve().isSingle();
+        final boolean one = solve().isSingle();
     }
 
     @Test
     public void cardinalityMany() {
-        boolean many = solve().isMultiple();
+        final boolean many = solve().isMultiple();
     }
 
     @Test
     public void count() {
-        int nbr = solve().count();
+        final int nbr = solve().count();
+    }
+
+    // Values
+
+    @Test
+    public void projectStringsCheckExistence() {
+        final boolean valueExists = solve().var(strVar()).exists();
     }
 
 
     @Test
-    public void projectStrings() {
-        final List<String> values = solve().var(strVar()).list();
+    public void projectStringsAndCount() {
+        final int numberOfValues = solve().var(strVar()).count();
     }
 
 
-    private ResultHolder solve() {
+    @Test
+    public void projectStringsToList() {
+        final List<String> values = solve().var(strVar()).list();
+    }
+
+    @Test
+    public void projectStringsToSet() {
+        final Set<String> values = solve().var(strVar()).set();
+    }
+
+    // More projection methods needed here (iterator, spliterator, stream, array, etc)
+
+    // Aggregation and consolidation
+
+    @Test
+    public void ensureOnlyThreeDistinctValues() {
+        solve().var(strVar()).distinct().exactly(3).exists();
+    }
+
+
+
+    @Test
+    public void min() {
+        final Double min = solve().var(doubleVar()).min();
+    }
+
+    @Test
+    public void sum() {
+        final Integer sum = solve().var(intVar()).sum();
+    }
+
+
+    // Limit arity
+
+    @Test
+    public void projectSomeValues() {
+        List<String> values = solve().var(strVar()).limit(5).list();
+    }
+
+    // Convert arity
+
+    @Test
+    public void projectSingleValue() {
+        final String single = solve().var(strVar()).single();
+    }
+
+
+
+
+
+    // Helper
+    private ResultHolder<MyDTO> solve() {
         return null;
     }
 
