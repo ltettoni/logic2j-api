@@ -1,5 +1,6 @@
 package org.logic2j.api.result;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.logic2j.test.domain.MyDTO;
 
@@ -8,6 +9,7 @@ import java.util.Set;
 
 import static org.logic2j.engine.model.Var.*;
 
+@Ignore("Cannot yet test")
 public class ResultApiShapeTest {
 
     // Results
@@ -93,7 +95,7 @@ public class ResultApiShapeTest {
 
 
     // Helper
-    private ResultHolder<MyDTO> solve() {
+    private ResultsHolder<MyDTO> solve() {
         return null;
     }
 
