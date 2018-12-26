@@ -29,56 +29,56 @@ import static org.logic2j.engine.model.SimpleBindings.empty;
 
 public class ConstantTest {
 
-    @Test
-    public void emptyBinding() {
-        final Constant<Integer> binding = empty(Integer.class);
-        assertThat(binding.size()).isEqualTo(0L);
-        assertThat(binding.isUniqueFeed()).isFalse();
-        assertThat(binding.toArray().length).isEqualTo(0);
-        assertThat(binding.toStream().count()).isEqualTo(0L);
-    }
+  @Test
+  public void emptyBinding() {
+    final Constant<Integer> binding = empty(Integer.class);
+    assertThat(binding.size()).isEqualTo(0L);
+    assertThat(binding.isUniqueFeed()).isFalse();
+    assertThat(binding.toArray().length).isEqualTo(0);
+    assertThat(binding.toStream().count()).isEqualTo(0L);
+  }
 
-    @Test
-    public void array() {
-        final Constant<Integer> binding = bind(1, 2, 3, 4, 5, 4, 3, 2, 1);
-        assertThat(binding.size()).isEqualTo(9L);
-        // Can get several times as an array
-        assertThat(binding.toArray().length).isEqualTo(9);
-        assertThat(binding.toArray().length).isEqualTo(9);
-        // But can get also several times as Stream
-        assertThat(binding.toStream().count()).isEqualTo(9L);
-        assertThat(binding.toStream().count()).isEqualTo(9L);
-    }
+  @Test
+  public void array() {
+    final Constant<Integer> binding = bind(1, 2, 3, 4, 5, 4, 3, 2, 1);
+    assertThat(binding.size()).isEqualTo(9L);
+    // Can get several times as an array
+    assertThat(binding.toArray().length).isEqualTo(9);
+    assertThat(binding.toArray().length).isEqualTo(9);
+    // But can get also several times as Stream
+    assertThat(binding.toStream().count()).isEqualTo(9L);
+    assertThat(binding.toStream().count()).isEqualTo(9L);
+  }
 
-    @Test
-    public void setStream1() {
-        final Constant<Long> binding = bind(LongStream.range(1, 1000).boxed());
-        assertThat(binding.isUniqueFeed()).isTrue();
-        assertThat(binding.size()).isEqualTo(999L);
-        // Can get several times as an array
-        assertThat(binding.toArray().length).isEqualTo(999);
-        assertThat(binding.toArray().length).isEqualTo(999);
-    }
+  @Test
+  public void setStream1() {
+    final Constant<Long> binding = bind(LongStream.range(1, 1000).boxed());
+    assertThat(binding.isUniqueFeed()).isTrue();
+    assertThat(binding.size()).isEqualTo(999L);
+    // Can get several times as an array
+    assertThat(binding.toArray().length).isEqualTo(999);
+    assertThat(binding.toArray().length).isEqualTo(999);
+  }
 
-    @Test
-    public void setIterator1() {
-        final Constant<Long> binding = bind(LongStream.range(1, 1000).boxed().collect(Collectors.toList()).iterator());
-        assertThat(binding.isUniqueFeed()).isTrue();
-        assertThat(binding.size()).isEqualTo(999L);
-    }
+  @Test
+  public void setIterator1() {
+    final Constant<Long> binding = bind(LongStream.range(1, 1000).boxed().collect(Collectors.toList()).iterator());
+    assertThat(binding.isUniqueFeed()).isTrue();
+    assertThat(binding.size()).isEqualTo(999L);
+  }
 
-    @Test
-    public void infiniteStream1() {
-        final Constant<Integer> binding = bind(new Random().ints().limit(20000).boxed());
-        assertThat(binding.isUniqueFeed()).isTrue();
-        assertThat(binding.size()).isEqualTo(20000L);
-    }
+  @Test
+  public void infiniteStream1() {
+    final Constant<Integer> binding = bind(new Random().ints().limit(20000).boxed());
+    assertThat(binding.isUniqueFeed()).isTrue();
+    assertThat(binding.size()).isEqualTo(20000L);
+  }
 
-    @Test(expected = IllegalStateException.class)
-    public void consumeStream() {
-        final Constant<Integer> binding = bind(new Random().ints().limit(10).boxed());
-        assertThat(binding.toStream().count()).isEqualTo(10L);
-        assertThat(binding.toStream().count()).isEqualTo(10L);
-    }
+  @Test(expected = IllegalStateException.class)
+  public void consumeStream() {
+    final Constant<Integer> binding = bind(new Random().ints().limit(10).boxed());
+    assertThat(binding.toStream().count()).isEqualTo(10L);
+    assertThat(binding.toStream().count()).isEqualTo(10L);
+  }
 
 }

@@ -28,48 +28,48 @@ import java.util.stream.Stream;
  */
 public interface Constant<T> extends Binding<T> {
 
-    /**
-     * @return true if data comes from a stream that cannot be consumed more than once.
-     */
-    boolean isUniqueFeed();
+  /**
+   * @return true if data comes from a stream that cannot be consumed more than once.
+   */
+  boolean isUniqueFeed();
 
-    /**
-     * Calculate the size. In case of a stream this will consumes it.
-     *
-     * @return Cardinality of data: 0=empty, 1=scalar, >1=vector, -1=unknown
-     */
-    long size();
+  /**
+   * Calculate the size. In case of a stream this will consumes it.
+   *
+   * @return Cardinality of data: 0=empty, 1=scalar, >1=vector, -1=unknown
+   */
+  long size();
 
-    /**
-     * Check content; in case of a stream this will consumes it.
-     *
-     * @param value
-     * @return
-     */
-    boolean contains(T value);
+  /**
+   * Check content; in case of a stream this will consumes it.
+   *
+   * @param value
+   * @return
+   */
+  boolean contains(T value);
 
-    /**
-     * Convert to array; in case of a stream this will consumes it.
-     *
-     * @return
-     */
-    T[] toArray();
+  /**
+   * Convert to array; in case of a stream this will consumes it.
+   *
+   * @return
+   */
+  T[] toArray();
 
-    /**
-     * Convert to single value; in case of a stream this will consumes it.
-     *
-     * @return
-     */
-    T toScalar();
+  /**
+   * Convert to single value; in case of a stream this will consumes it.
+   *
+   * @return
+   */
+  T toScalar();
 
-    /**
-     * Convert to a Stream.
-     *
-     * @return
-     */
-    Stream<T> toStream();
+  /**
+   * Convert to a Stream.
+   *
+   * @return
+   */
+  Stream<T> toStream();
 
-    default List<T> toList() {
-        return Arrays.asList(toArray());
-    }
+  default List<T> toList() {
+    return Arrays.asList(toArray());
+  }
 }
