@@ -11,7 +11,7 @@ import java.util.stream.StreamSupport;
 /**
  * Holds what results are desired by a client app until actually invoking any data generation.
  * Default implementation of most methods are provided - yet inefficient they will rely on
- * {@link #count()}.
+ * {@link #list()}.
  *
  * @param <T> Type of effective individual solutions
  */
