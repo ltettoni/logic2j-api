@@ -92,7 +92,7 @@ public class ResultApiShapeTest {
 
   // Helper
   private ResultsHolder<String> solve() {
-    return new ListResultHolder<String>("some", "values");
+    return new ListResultsHolder<>("some", "values");
   }
 
 }
