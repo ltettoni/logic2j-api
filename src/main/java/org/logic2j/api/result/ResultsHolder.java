@@ -5,6 +5,7 @@ import org.logic2j.engine.model.Var;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.IntFunction;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -15,7 +16,7 @@ import java.util.stream.StreamSupport;
  *
  * @param <T> Type of effective individual solutions
  */
-public interface ResultsHolder<T> extends Iterable<T> {
+public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
 
   // -----------------------------------------
   // Check existence and cardinality, default implems rely on count()
@@ -68,6 +69,15 @@ public interface ResultsHolder<T> extends Iterable<T> {
   // -----------------------------------------
   // Single-value cardinality
   // -----------------------------------------
+
+  @Override
+  default T get() {
+    final List<T> list = list();
+    if (list.size() == 0) {
+      return null;
+    }
+    return list.get(0);
+  }
 
   /**
    * @return Single value or empty. If more are produced they will be ignored.
