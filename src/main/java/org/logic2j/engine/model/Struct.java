@@ -208,7 +208,7 @@ public class Struct<T> extends Term implements Cloneable {
   // ---------------------------------------------------------------------------
 
   /**
-   * Set {@link Term#index} to {@link Term#NO_INDEX}, recursively collect all argument's terms first,
+   * Set Term.index to {@link Term#NO_INDEX}, recursively collect all argument's terms first,
    * then finally add this {@link Struct} to theCollectedTerms.
    * The functor alone (without its children) is NOT collected as a term. An atom is collected as itself.
    *
@@ -380,7 +380,7 @@ public class Struct<T> extends Term implements Cloneable {
   // ---------------------------------------------------------------------------
 
   /**
-   * For {@link Struct}s, the {@link Term#index} will be the maximal index of any variables that can be found, recursively, under all
+   * For {@link Struct}s, the Term.index will be the maximal index of any variables that can be found, recursively, under all
    * children arguments.
    *
    * @note Assigning indexes, for example with a base index of 0, will proceed sequentially by depth-first

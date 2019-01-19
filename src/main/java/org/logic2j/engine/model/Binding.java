@@ -18,8 +18,7 @@
 package org.logic2j.engine.model;
 
 /**
- * A Binding allows to pass {@link Var}s or {@link Constant}s as arguments of a {@link Struct},
- * typically in {@link org.logic2j.engine.predicates.impl.FOPredicate}s.
+ * A Binding allows to pass {@link Var}s or {@link Constant}s as arguments of a {@link Struct}.
  * The arguments of a {@link Struct} may be any java Object; however if you
  * need strong typing you should rather pass {@link Binding}s.
  */

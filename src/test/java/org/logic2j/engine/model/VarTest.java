@@ -45,7 +45,7 @@ public class VarTest {
 
   @Test(expected = InvalidTermException.class)
   public void constructorSameAsAnonymous() {
-    anyVar(new StringBuilder().append('_').toString()); // Voluntary composition via StringBuilder
+    anyVar("_"); // Voluntary composition via StringBuilder
   }
 
   @Test(expected = InvalidTermException.class)

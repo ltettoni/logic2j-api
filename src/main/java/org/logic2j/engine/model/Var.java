@@ -238,7 +238,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
   // ---------------------------------------------------------------------------
 
   /**
-   * Just add this to theCollectedTerms and set {@link Term#index} to {@link Term#NO_INDEX}.
+   * Just add this to theCollectedTerms and set Term.index to {@link Term#NO_INDEX}.
    *
    * @param theCollectedTerms
    */

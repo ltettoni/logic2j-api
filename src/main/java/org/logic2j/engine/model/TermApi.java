@@ -121,7 +121,7 @@ public class TermApi {
   }
 
   /**
-   * Recursively collect all terms and add them to the collectedTerms collection, and also initialize their {@link Term#index} to
+   * Recursively collect all terms and add them to the collectedTerms collection, and also initialize their Term.index to
    * {@link Term#NO_INDEX}. This is an internal template method: the public API entry point is {@link TermApi#collectTerms(Object)}; see a
    * more
    * detailed description there.
@@ -140,7 +140,7 @@ public class TermApi {
   }
 
   /**
-   * Recursively collect all terms at and under theTerm, and also reinit their {@link Term#index} to {@link Term#NO_INDEX}. For
+   * Recursively collect all terms at and under theTerm, and also reinit their Term.index to {@link Term#NO_INDEX}. For
    * example for a
    * structure "s(a,b(c),d(b(a)),X,X,Y)", the result Collection will hold [a, c, b(c), b(a), c(b(a)), X, X, Y]
    *
@@ -225,7 +225,7 @@ public class TermApi {
   }
 
   /**
-   * Assign the {@link Term#index} value for {@link Var} and {@link Struct}s.
+   * Assign the Term.index value for {@link Var} and {@link Struct}s.
    * Will recurse through Struct.
    *
    * @param theIndexOfNextNonIndexedVar

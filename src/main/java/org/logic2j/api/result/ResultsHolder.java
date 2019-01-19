@@ -19,7 +19,7 @@ import java.util.stream.StreamSupport;
 public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
 
   // -----------------------------------------
-  // Check existence and cardinality, default implems rely on count()
+  // Check existence and cardinality, default implementations rely on count()
   // -----------------------------------------
 
   /**
@@ -116,7 +116,7 @@ public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
   List<T> list();
 
   default Set<T> set() {
-    return addTo(new HashSet<T>());
+    return addTo(new HashSet<>());
   }
 
   /**
@@ -134,7 +134,7 @@ public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
     return StreamSupport.stream(spliterator(), false);
   }
 
-  default <T> T[] array(T[] destinationArray) {
+  default T[] array(T[] destinationArray) {
     return list().toArray(destinationArray);
   }
 

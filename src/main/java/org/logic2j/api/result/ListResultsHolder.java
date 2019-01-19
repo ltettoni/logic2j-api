@@ -12,6 +12,7 @@ public class ListResultsHolder<T> implements ResultsHolder<T> {
     this.internal = internal;
   }
 
+  @SafeVarargs
   public ListResultsHolder(T... elements) {
     this(Arrays.asList(elements));
   }

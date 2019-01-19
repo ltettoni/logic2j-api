@@ -281,7 +281,7 @@ public class SimpleBindings {
       @Override
       public boolean contains(T value) {
         consumeNow();
-        return Arrays.stream(this.data).anyMatch(value::equals);
+        return Arrays.asList(this.data).contains(value);
       }
 
       @Override
