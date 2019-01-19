@@ -252,7 +252,7 @@ public class TermApi {
     if (thePredicate instanceof Struct) {
       return ((Struct) thePredicate).getPredicateSignature();
     }
-    return String.valueOf(thePredicate) + "/0";
+    return thePredicate + "/0";
   }
 
   public String functorFromSignature(String signature) {
