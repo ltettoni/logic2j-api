@@ -173,6 +173,14 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
     return new Var<>(Long.class, varName);
   }
 
+  public static Var<Boolean> boolVar() {
+    return new Var<>(Boolean.class);
+  }
+
+  public static Var<Boolean> boolVar(CharSequence varName) {
+    return new Var<>(Boolean.class, varName);
+  }
+
   /**
    * Copy constructor
    * Clones the name and the index.
