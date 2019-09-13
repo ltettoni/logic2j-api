@@ -17,7 +17,6 @@ public class ListResultsHolder<T> implements ResultsHolder<T> {
     this(Arrays.asList(elements));
   }
 
-
   @Override
   public List<T> list() {
     return internal;

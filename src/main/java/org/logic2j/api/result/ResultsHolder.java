@@ -152,10 +152,6 @@ public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
   // Convert data type
   // -----------------------------------------
 
-  default <R> ResultsHolder<R> var(Var<R> variable) {
-    throw new UnsupportedOperationException("Operation not supported on " + this);
-  }
-
   default <R> ResultsHolder<R> map(Function<T, R> mapping) {
     throw new UnsupportedOperationException("Operation not supported on " + this);
   }

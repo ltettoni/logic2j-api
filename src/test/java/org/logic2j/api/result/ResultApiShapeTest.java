@@ -91,8 +91,8 @@ public class ResultApiShapeTest {
 
 
   // Helper
-  private ResultsHolder<String> solve() {
-    return new ListResultsHolder<>("some", "values");
+  private AnyVarResultHolder solve() {
+    return new AnyVarResultHolder();
   }
 
 }
