@@ -348,7 +348,7 @@ public class Struct<T> extends Term implements Cloneable {
   public Object getLHS() {
     if (this.arity != 2) {
       throw new InvalidTermException(
-          "Can't get the left-hand-side argument of \"" + this + "\" (predicate arity is: " + getPredicateSignature() + ")");
+              "Can't get the left-hand-side argument of \"" + this + "\" (predicate arity is: " + getPredicateSignature() + ")");
     }
     return this.args[0];
   }
@@ -360,7 +360,7 @@ public class Struct<T> extends Term implements Cloneable {
   public Object getRHS() {
     if (this.arity != 2) {
       throw new InvalidTermException(
-          "Can't get the right-hand-side argument of \"" + this + "\" (predicate arity is: " + getPredicateSignature() + ")");
+              "Can't get the right-hand-side argument of \"" + this + "\" (predicate arity is: " + getPredicateSignature() + ")");
     }
     return this.args[1];
   }

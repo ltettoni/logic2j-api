@@ -49,7 +49,7 @@ public class TermApi {
     final String aritySpec = theArity >= 0 ? "arity=" + theArity : "any arity";
     if (!(theTerm instanceof Struct)) {
       final String message =
-          "A Struct of " + functorSpec + " and " + aritySpec + " was expected, got instead: " + theTerm + " of class " + theTerm.getClass().getName();
+              "A Struct of " + functorSpec + " and " + aritySpec + " was expected, got instead: " + theTerm + " of class " + theTerm.getClass().getName();
       throw new InvalidTermException(message);
     }
     final Struct s = (Struct) theTerm;
@@ -288,9 +288,9 @@ public class TermApi {
     }
     final String textAsString = theText.toString();
     final boolean needQuote =
-        /* Fast check */ !Character.isLowerCase(theText.charAt(0)) ||
-        /* For numbers */ textAsString.indexOf('.') >= 0 ||
-        /* Much slower */ !ATOM_PATTERN.matcher(textAsString).matches();
+            /* Fast check */ !Character.isLowerCase(theText.charAt(0)) ||
+            /* For numbers */ textAsString.indexOf('.') >= 0 ||
+            /* Much slower */ !ATOM_PATTERN.matcher(textAsString).matches();
     if (needQuote) {
       final StringBuilder sb = new StringBuilder(theText.length() + 2);
       sb.append(Struct.QUOTE); // Opening quote
@@ -420,7 +420,7 @@ public class TermApi {
    */
   public Var[] distinctVars(Object term) {
     final Var[] tempArray = new Var[100]; // Enough for the moment - we could plan an auto-allocating array if needed, I doubt it
-    final int[] nbVars = new int[] {0};
+    final int[] nbVars = new int[]{0};
 
     final TermVisitor<Void> findVarsVisitor = new TermVisitor<Void>() {
       @Override
