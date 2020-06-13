@@ -17,12 +17,12 @@
 
 package org.logic2j.engine.model;
 
-import org.junit.Test;
-import org.logic2j.engine.exception.InvalidTermException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.logic2j.engine.model.Var.anon;
 import static org.logic2j.engine.model.Var.anyVar;
+
+import org.junit.Test;
+import org.logic2j.engine.exception.InvalidTermException;
 
 public class VarTest {
 

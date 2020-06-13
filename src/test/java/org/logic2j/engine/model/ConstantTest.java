@@ -17,15 +17,14 @@
 
 package org.logic2j.engine.model;
 
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.logic2j.engine.model.SimpleBindings.bind;
+import static org.logic2j.engine.model.SimpleBindings.empty;
 
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.logic2j.engine.model.SimpleBindings.bind;
-import static org.logic2j.engine.model.SimpleBindings.empty;
+import org.junit.Test;
 
 public class ConstantTest {
 

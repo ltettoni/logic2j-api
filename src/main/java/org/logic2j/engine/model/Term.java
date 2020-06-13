@@ -17,12 +17,11 @@
 
 package org.logic2j.engine.model;
 
-import org.logic2j.engine.visitor.TermVisitor;
+import static org.logic2j.engine.model.TermApiLocator.termApi;
 
 import java.io.Serializable;
 import java.util.Collection;
-
-import static org.logic2j.engine.model.TermApiLocator.termApi;
+import org.logic2j.engine.visitor.TermVisitor;
 
 /**
  * <p>

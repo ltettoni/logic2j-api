@@ -17,14 +17,13 @@
 
 package org.logic2j.engine.model;
 
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicLong;
 import org.logic2j.engine.exception.InvalidTermException;
 import org.logic2j.engine.visitor.TermVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * This class represents a variable term.

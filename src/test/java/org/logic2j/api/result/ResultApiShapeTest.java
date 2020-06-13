@@ -1,14 +1,13 @@
 package org.logic2j.api.result;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.logic2j.engine.model.Var.doubleVar;
+import static org.logic2j.engine.model.Var.strVar;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import static org.logic2j.engine.model.Var.doubleVar;
-import static org.logic2j.engine.model.Var.strVar;
+import org.junit.Ignore;
+import org.junit.Test;
 
 @Ignore("Cannot yet test")
 public class ResultApiShapeTest {

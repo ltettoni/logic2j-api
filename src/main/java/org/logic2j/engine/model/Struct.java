@@ -17,14 +17,13 @@
 package org.logic2j.engine.model;
 
 
-import org.logic2j.engine.exception.InvalidTermException;
-import org.logic2j.engine.visitor.TermVisitor;
+import static org.logic2j.engine.model.TermApiLocator.termApi;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
-import static org.logic2j.engine.model.TermApiLocator.termApi;
+import org.logic2j.engine.exception.InvalidTermException;
+import org.logic2j.engine.visitor.TermVisitor;
 
 /**
  * A {@link Struct} represents either a Prolog compound {@link Term}s such as functor(arg1, arg2),

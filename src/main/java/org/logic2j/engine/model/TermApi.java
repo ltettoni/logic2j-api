@@ -18,17 +18,16 @@
 package org.logic2j.engine.model;
 
 
-import org.logic2j.engine.exception.InvalidTermException;
-import org.logic2j.engine.visitor.ExtendedTermVisitor;
-import org.logic2j.engine.visitor.TermVisitor;
+import static org.logic2j.engine.model.Var.strVar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import static org.logic2j.engine.model.Var.strVar;
+import org.logic2j.engine.exception.InvalidTermException;
+import org.logic2j.engine.visitor.ExtendedTermVisitor;
+import org.logic2j.engine.visitor.TermVisitor;
 
 /**
  * Facade API to the {@link Term} hierarchy, to ease their handling. This class resides in the same package than the {@link Term}
