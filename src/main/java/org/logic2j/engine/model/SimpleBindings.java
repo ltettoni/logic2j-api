@@ -82,7 +82,7 @@ public class SimpleBindings {
       }
 
       @Override
-      public Class getType() {
+      public Class<T> getType() {
         return type;
       }
     };
@@ -146,7 +146,7 @@ public class SimpleBindings {
       }
 
       @Override
-      public Class getType() {
+      public Class<T> getType() {
         if (values.length == 0) {
           throw new IllegalStateException("Trying to get type from empty array");
         }
@@ -154,7 +154,7 @@ public class SimpleBindings {
         if (first == null) {
           throw new IllegalStateException("Cannot determine type from array, first element is null");
         }
-        return first.getClass();
+        return (Class<T>) first.getClass();
       }
 
       @Override
@@ -207,7 +207,7 @@ public class SimpleBindings {
       }
 
       @Override
-      public Class getType() {
+      public Class<T> getType() {
         if (coll.isEmpty()) {
           throw new IllegalStateException("Trying to get type from empty collection");
         }
@@ -215,7 +215,7 @@ public class SimpleBindings {
         if (first == null) {
           throw new IllegalStateException("Cannot determine type from collection, first element is null");
         }
-        return first.getClass();
+        return (Class<T>) first.getClass();
       }
 
       @Override
@@ -392,8 +392,8 @@ public class SimpleBindings {
     }
 
     @Override
-    public Class getType() {
-      return toScalar().getClass();
+    public Class<T> getType() {
+      return (Class<T>) toScalar().getClass();
     }
 
     public String toString() {

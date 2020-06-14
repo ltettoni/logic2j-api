@@ -47,8 +47,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
   /**
    * Singleton anonymous variable. You can safely compare them with ==.
    */
-  @SuppressWarnings("rawtypes")
-  private static final Var ANONYMOUS_VAR = new Var<>();
+  private static final Var<?> ANONYMOUS_VAR = new Var<>();
   private static final AtomicLong sequence = new AtomicLong(1L);
 
   /**
@@ -56,7 +55,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
    */
   public static final Var<Object> WHOLE_SOLUTION_VAR = new Var<>(Object.class, WHOLE_SOLUTION_VAR_NAME);
 
-  public static final Comparator<Var> COMPARATOR_BY_NAME = Comparator.comparing(Var::getName);
+  public static final Comparator<Var<?>> COMPARATOR_BY_NAME = Comparator.comparing(Var::getName);
 
   /**
    * The anonymous variable (following Prolog's standard name "_"), with a generic.
@@ -257,7 +256,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
     // TODO I'm not actually sure why we do this - we should probably log and identify why this case
     for (final Object term : theCollectedTerms) {
       if (term instanceof Var) {
-        final Var var = (Var) term;
+        final Var<?>var = (Var<?>) term;
         if (getName().equals(var.getName())) {
           return var;
         }
@@ -314,7 +313,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
     if (!(other instanceof Var)) {
       return false;
     }
-    final Var that = (Var) other;
+    final Var<?>that = (Var<?>) other;
     return this.getName() == that.getName() && this.getIndex() == that.getIndex(); // Names are {@link String#intern()}alized so OK to check by reference
   }
 

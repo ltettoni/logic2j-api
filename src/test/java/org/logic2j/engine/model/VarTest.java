@@ -28,7 +28,7 @@ public class VarTest {
 
   @Test
   public void constructorValid() {
-    final Var v1 = anyVar("X");
+    final Var<?>v1 = anyVar("X");
     assertThat(v1.getName()).isEqualTo("X");
     assertThat(v1.hasIndex()).isFalse();
   }
@@ -61,7 +61,7 @@ public class VarTest {
 
   @Test
   public void constructorWithCharSequence() {
-    final Var v1 = anyVar(new StringBuilder("X"));
+    final Var<?>v1 = anyVar(new StringBuilder("X"));
     assertThat(v1.getName()).isEqualTo("X");
     assertThat(v1.hasIndex()).isFalse();
   }
@@ -79,15 +79,15 @@ public class VarTest {
 
   @Test
   public void idempotence() {
-    final Var v1 = anyVar("X");
+    final Var<?>v1 = anyVar("X");
     assertThat(v1).isEqualTo(v1);
   }
 
 
   @Test
   public void equality() {
-    final Var v1 = anyVar("X");
-    final Var v2 = anyVar("X");
+    final Var<?>v1 = anyVar("X");
+    final Var<?>v2 = anyVar("X");
     assertThat(v2).isNotSameAs(v1);
     assertThat(v2).isEqualTo(v1);
     assertThat(v1).isEqualTo(v2);
@@ -96,7 +96,7 @@ public class VarTest {
 
   @Test
   public void lowerCaseIsValid() {
-    final Var v1 = anyVar("lowercase");
+    final Var<?>v1 = anyVar("lowercase");
     assertThat(v1.getName()).isEqualTo("lowercase");
     assertThat(v1.hasIndex()).isFalse();
   }

@@ -35,14 +35,14 @@ public class TermApiTest {
   public void structurallyEquals() {
     // Vars are never structurally equal ...
     assertThat(anyVar("X").structurallyEquals(anyVar("Y"))).isFalse();
-    final Var x1 = anyVar("X");
-    final Var x2 = anyVar("X");
+    final Var<?>x1 = anyVar("X");
+    final Var<?>x2 = anyVar("X");
     // ... even when they have the same name
     assertThat(x1.structurallyEquals(x2)).isFalse();
-    final Struct s = new Struct("s", x1, x2);
+    final Struct<?> s = new Struct<>("s", x1, x2);
     assertThat(termApi().structurallyEquals(s.getArg(0), s.getArg(1))).isFalse();
     // After factorization, the 2 X will be same
-    final Struct s2 = termApi().factorize(s);
+    final Struct<?> s2 = termApi().factorize(s);
     assertThat(s2).isNotSameAs(s);
     assertThat(s.structurallyEquals(s2)).isFalse();
     assertThat(termApi().structurallyEquals(s2.getArg(0), s2.getArg(1))).isTrue();
@@ -55,17 +55,17 @@ public class TermApiTest {
     term = Struct.valueOf("p", "X", 2);
     logger.info("Flat terms: {}", termApi().collectTerms(term));
     //
-    term = Struct.valueOf("a", new Struct("b"), "c");
+    term = Struct.valueOf("a", new Struct<>("b"), "c");
     logger.info("Flat terms: {}", termApi().collectTerms(term));
     //
-    term = new Struct(Struct.FUNCTOR_CLAUSE, new Struct("a", Struct.valueOf("p", "X", "Y")), Struct.valueOf("p", "X", "Y"));
+    term = new Struct<>(Struct.FUNCTOR_CLAUSE, new Struct<>("a", Struct.valueOf("p", "X", "Y")), Struct.valueOf("p", "X", "Y"));
     logger.info("Flat terms: {}", termApi().collectTerms(term));
     //
-    final Term clause = new Struct(Struct.FUNCTOR_CLAUSE, new Struct("a", Struct.valueOf("p", "X", "Y")), Struct.valueOf("p", "X", "Y"));
+    final Term clause = new Struct<>(Struct.FUNCTOR_CLAUSE, new Struct<>("a", Struct.valueOf("p", "X", "Y")), Struct.valueOf("p", "X", "Y"));
     logger.info("Flat terms of original {}", termApi().collectTerms(clause));
     final Object t2 = termApi().normalize(clause);
-    logger.info("Found {} bindings", ((Struct) t2).getIndex());
-    assertThat(((Struct) t2).getIndex()).isEqualTo(2);
+    logger.info("Found {} bindings", ((Struct<?>) t2).getIndex());
+    assertThat(((Struct<?>) t2).getIndex()).isEqualTo(2);
     logger.info("Flat terms of copy     {}", termApi().collectTerms(t2));
     assertThat(t2.toString()).isEqualTo(clause.toString());
   }
@@ -73,7 +73,7 @@ public class TermApiTest {
   @Test
   public void assignIndexes() {
     int nbVars;
-    nbVars = termApi().assignIndexes(new Struct("f"), 0);
+    nbVars = termApi().assignIndexes(new Struct<>("f"), 0);
     assertThat(nbVars).isEqualTo(0);
     nbVars = termApi().assignIndexes(anyVar("X"), 0);
     assertThat(nbVars).isEqualTo(1);

@@ -26,10 +26,10 @@ public class StructTest {
 
   @Test
   public void struct0() {
-    Struct a1 = new Struct("f");
+    Struct<?> a1 = new Struct<>("f");
     assertThat(a1.getArity()).isEqualTo(0);
     assertThat(a1.getName()).isEqualTo("f");
-    Struct a2 = new Struct("f");
+    Struct<?> a2 = new Struct<>("f");
     assertThat(a2).isNotSameAs(a1);
     assertThat(a2).isEqualTo(a1);
   }
@@ -48,22 +48,22 @@ public class StructTest {
   public void atomAsStruct() {
     Object a1 = Struct.atom("true");
     assertThat(a1 instanceof Struct).isTrue();
-    assertThat(((Struct) a1).getName()).isEqualTo("true");
+    assertThat(((Struct<?>) a1).getName()).isEqualTo("true");
     Object a2 = Struct.atom("true");
     assertThat(a2).isNotSameAs(a1);
   }
 
   @Test
   public void struct2() {
-    Struct a1 = new Struct("f", "a", "b");
+    Struct<?> a1 = new Struct<>("f", "a", "b");
     assertThat(a1.getArity()).isEqualTo(2);
     assertThat(a1.getName()).isEqualTo("f");
     assertThat(a1.getArg(0)).isEqualTo("a");
     assertThat(a1.getArg(1)).isEqualTo("b");
-    Struct a2 = new Struct("f", "a", "b");
+    Struct<?> a2 = new Struct<>("f", "a", "b");
     assertThat(a2).isNotSameAs(a1);
     assertThat(a2).isEqualTo(a1);
-    assertThat(new Struct("f", "b", "a")).isNotEqualTo(a1);
+    assertThat(new Struct<>("f", "b", "a")).isNotEqualTo(a1);
   }
 
 

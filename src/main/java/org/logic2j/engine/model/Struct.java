@@ -61,8 +61,8 @@ public class Struct<T> extends Term implements Cloneable {
   // ---------------------------------------------------------------------------
   // Some key atoms as singletons
   // ---------------------------------------------------------------------------
-  public static final Struct ATOM_TRUE = new Struct(FUNCTOR_TRUE);
-  public static final Struct ATOM_FALSE = new Struct(FUNCTOR_FALSE);
+  public static final Struct<?> ATOM_TRUE = new Struct<>(FUNCTOR_TRUE);
+  public static final Struct<?> ATOM_FALSE = new Struct<>(FUNCTOR_FALSE);
   public static final char PAR_CLOSE = ')';
   public static final char PAR_OPEN = '(';
   /**
@@ -143,7 +143,7 @@ public class Struct<T> extends Term implements Cloneable {
       for (int i = 0; i < this.arity; i++) {
         Object cloned = original.args[i];
         if (cloned instanceof Struct) {
-          cloned = new Struct((Struct) cloned);
+          cloned = new Struct<>((Struct<?>) cloned);
         }
         this.args[i] = cloned;
       }
@@ -165,7 +165,7 @@ public class Struct<T> extends Term implements Cloneable {
       // We can return an internalized String
       return functor;
     }
-    return new Struct(functor, 0);
+    return new Struct<>(functor, 0);
   }
 
   /**
@@ -175,8 +175,8 @@ public class Struct<T> extends Term implements Cloneable {
    * @note This method is a static factory, not a constructor, to emphasize that arguments
    * are not of the type needed by this class, but need transformation.
    */
-  public static Struct valueOf(String theFunctor, Object... argList) {
-    final Struct newInstance = new Struct(theFunctor, argList.length);
+  public static Struct<?> valueOf(String theFunctor, Object... argList) {
+    final Struct<?> newInstance = new Struct<>(theFunctor, argList.length);
     int i = 0;
     for (final Object element : argList) {
       newInstance.args[i++] = termApi().valueOf(element);
@@ -190,10 +190,10 @@ public class Struct<T> extends Term implements Cloneable {
    * @param newArguments New arguments, length must be same arity as original Struct
    * @return A clone of this.
    */
-  public Struct cloneWithNewArguments(Object[] newArguments) {
+  public Struct<?> cloneWithNewArguments(Object[] newArguments) {
     // We can actually change arity, this is used when we clone ","(X,Y) to ","(X,Y,Z)
     try {
-      final Struct clone = (Struct) this.clone();
+      final Struct<?> clone = (Struct<?>) this.clone();
       clone.args = newArguments;
       clone.setNameAndArity(clone.name, clone.args.length); // Also calculate the signature
       return clone;
@@ -230,9 +230,9 @@ public class Struct<T> extends Term implements Cloneable {
       anyChange |= (newArgs[i] != this.args[i]);
     }
     // Now initialize result - a new Struct only if any change was found below
-    final Struct factorized;
+    final Struct<?> factorized;
     if (anyChange) {
-      factorized = new Struct(this);
+      factorized = new Struct<>(this);
       factorized.args = newArgs;
     } else {
       factorized = this;
@@ -245,10 +245,10 @@ public class Struct<T> extends Term implements Cloneable {
     return factorized;
   }
 
-  Var findVar(String theVariableName) {
+  Var<?>findVar(String theVariableName) {
     for (int i = 0; i < this.arity; i++) {
       final Object term = this.args[i];
-      final Var found = termApi().findVar(term, theVariableName);
+      final Var<?>found = termApi().findVar(term, theVariableName);
       if (found != null) {
         return found;
       }
@@ -268,7 +268,7 @@ public class Struct<T> extends Term implements Cloneable {
     if (!(theOther instanceof Struct)) {
       return false;
     }
-    final Struct that = (Struct) theOther;
+    final Struct<?> that = (Struct<?>) theOther;
     // Arity and names must match.
     if (this.arity == that.arity && this.name == that.name) { // Names are {@link String#intern()}alized so OK to check by reference
       for (int i = 0; i < this.arity; i++) {
@@ -410,7 +410,7 @@ public class Struct<T> extends Term implements Cloneable {
     visited.add(this);
     for (final Object term : this.args) {
       if (term instanceof Struct) {
-        ((Struct) term).avoidCycle(visited);
+        ((Struct<?>) term).avoidCycle(visited);
       }
     }
   }
@@ -466,7 +466,7 @@ public class Struct<T> extends Term implements Cloneable {
     if (!(other instanceof Struct)) {
       return false;
     }
-    final Struct that = (Struct) other;
+    final Struct<?> that = (Struct<?>) other;
     if (!(this.arity == that.arity && this.name == that.name)) { // Names are {@link String#intern()}alized so OK to check by reference
       return false;
     }

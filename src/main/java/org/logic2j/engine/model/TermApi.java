@@ -43,7 +43,7 @@ public class TermApi {
   private static final Pattern ATOM_PATTERN = Pattern.compile("(!|[a-z][a-zA-Z_0-9]*)");
 
   // TODO Currently unused but we probably should use an assertion method with very clean error handling as this one
-  private static Struct requireStruct(Object theTerm, String theFunctor, int theArity) {
+  private static Struct<?> requireStruct(Object theTerm, String theFunctor, int theArity) {
     final String functorSpec = theFunctor != null ? "functor \"" + theFunctor + '"' : "any functor";
     final String aritySpec = theArity >= 0 ? "arity=" + theArity : "any arity";
     if (!(theTerm instanceof Struct)) {
@@ -51,7 +51,7 @@ public class TermApi {
               "A Struct of " + functorSpec + " and " + aritySpec + " was expected, got instead: " + theTerm + " of class " + theTerm.getClass().getName();
       throw new InvalidTermException(message);
     }
-    final Struct s = (Struct) theTerm;
+    final Struct<?> s = (Struct<?>) theTerm;
     if (theFunctor != null && s.getName() != theFunctor) {
       throw new InvalidTermException("Got a Struct of wrong functor \"" + s.getName() + "\" instead of " + functorSpec + " and " + aritySpec);
     }
@@ -71,10 +71,10 @@ public class TermApi {
   public <T> T accept(ExtendedTermVisitor<T> theVisitor, Object theTerm) {
     // Most common cases are Struct and Var, handled by super interface TermVisitor
     if (theTerm instanceof Struct) {
-      return theVisitor.visit((Struct) theTerm);
+      return theVisitor.visit((Struct<?>) theTerm);
     }
     if (theTerm instanceof Var) {
-      return theVisitor.visit((Var) theTerm);
+      return theVisitor.visit((Var<?>) theTerm);
     }
     // Other possible cases require instanceof since any Object can be
     if (theTerm instanceof String) {
@@ -89,7 +89,7 @@ public class TermApi {
       return true;
     }
     if (theTerm instanceof Struct) {
-      final Struct s = (Struct) theTerm;
+      final Struct<?> s = (Struct<?>) theTerm;
       return s.getArity() == 0;
     }
     return false;
@@ -116,7 +116,7 @@ public class TermApi {
    * @return true if theTerm denotes a free variable, but not anonymous variable.
    */
   public boolean isFreeNamedVar(Object theTerm) {
-    return theTerm instanceof Var && Var.anon() != theTerm;
+    return theTerm instanceof Var<?>&& Var.anon() != theTerm;
   }
 
   /**
@@ -129,9 +129,9 @@ public class TermApi {
    */
   public void collectTermsInto(Object theTerm, Collection<Object> collection) {
     if (theTerm instanceof Struct) {
-      ((Struct) theTerm).collectTermsInto(collection);
+      ((Struct<?>) theTerm).collectTermsInto(collection);
     } else if (theTerm instanceof Var) {
-      ((Var) theTerm).collectTermsInto(collection);
+      ((Var<?>) theTerm).collectTermsInto(collection);
     } else {
       // Not a Term but a plain Java object
       collection.add(theTerm);
@@ -176,9 +176,9 @@ public class TermApi {
    */
   public Object factorize(Object theTerm, Collection<Object> collection) {
     if (theTerm instanceof Struct) {
-      return ((Struct) theTerm).factorize(collection);
+      return ((Struct<?>) theTerm).factorize(collection);
     } else if (theTerm instanceof Var) {
-      return ((Var) theTerm).factorize(collection);
+      return ((Var<?>) theTerm).factorize(collection);
     } else {
       // Not a Term but a plain Java object - won't factorize
       return theTerm;
@@ -194,9 +194,9 @@ public class TermApi {
    */
   public boolean structurallyEquals(Object theTerm, Object theOther) {
     if (theTerm instanceof Struct) {
-      return ((Struct) theTerm).structurallyEquals(theOther);
+      return ((Struct<?>) theTerm).structurallyEquals(theOther);
     } else if (theTerm instanceof Var) {
-      return ((Var) theTerm).structurallyEquals(theOther);
+      return ((Var<?>) theTerm).structurallyEquals(theOther);
     } else {
       // Not a Term but a plain Java object - calculate equality
       return theTerm.equals(theOther);
@@ -209,14 +209,14 @@ public class TermApi {
    * @param theVariableName
    * @return A {@link Var} with the specified name, or null when not found.
    */
-  public Var findVar(Object theTerm, String theVariableName) {
+  public Var<?>findVar(Object theTerm, String theVariableName) {
     if (theVariableName == Var.WHOLE_SOLUTION_VAR_NAME) {
       return Var.WHOLE_SOLUTION_VAR;
     }
     if (theTerm instanceof Struct) {
-      return ((Struct) theTerm).findVar(theVariableName);
-    } else if (theTerm instanceof Var && ((Var) theTerm).getName() == theVariableName) {
-      return (Var) theTerm;
+      return ((Struct<?>) theTerm).findVar(theVariableName);
+    } else if (theTerm instanceof Var<?> && ((Var<?>) theTerm).getName() == theVariableName) {
+      return (Var<?>) theTerm;
     } else {
       // Not a Term but a plain Java object - no var
       return null;
@@ -233,9 +233,9 @@ public class TermApi {
    */
   public int assignIndexes(Object theTerm, int theIndexOfNextNonIndexedVar) {
     if (theTerm instanceof Struct) {
-      return ((Struct) theTerm).assignIndexes(theIndexOfNextNonIndexedVar);
+      return ((Struct<?>) theTerm).assignIndexes(theIndexOfNextNonIndexedVar);
     } else if (theTerm instanceof Var) {
-      return ((Var) theTerm).assignIndexes(theIndexOfNextNonIndexedVar);
+      return ((Var<?>) theTerm).assignIndexes(theIndexOfNextNonIndexedVar);
     } else {
       // Not a Term but a plain Java object - can't assign an index
       return theIndexOfNextNonIndexedVar;
@@ -249,7 +249,7 @@ public class TermApi {
    */
   public String predicateSignature(Object thePredicate) {
     if (thePredicate instanceof Struct) {
-      return ((Struct) thePredicate).getPredicateSignature();
+      return ((Struct<?>) thePredicate).getPredicateSignature();
     }
     return thePredicate + "/0";
   }
@@ -325,7 +325,7 @@ public class TermApi {
   }
 
   // TODO Currently unused - but probably we should detect cycles!
-  void avoidCycle(Struct theClause) {
+  void avoidCycle(Struct<?> theClause) {
     final List<Term> visited = new ArrayList<>(20);
     theClause.avoidCycle(visited);
   }
@@ -383,7 +383,7 @@ public class TermApi {
         // Dubious for real programming, but some data sources may contain empty fields, and this is the only way to represent
         // them
         // as a Term
-        result = new Struct("");
+        result = new Struct<>("");
       } else if (Character.isUpperCase(chars.charAt(0)) || chars.startsWith(Var.ANONYMOUS_VAR_NAME)) {
         // Use Prolog's convention re variables starting with uppercase or underscore
         result = strVar(chars);
@@ -417,13 +417,13 @@ public class TermApi {
    * @param term
    * @return Array of unique Vars, in the order found by depth-first traversal.
    */
-  public Var[] distinctVars(Object term) {
-    final Var[] tempArray = new Var[100]; // Enough for the moment - we could plan an auto-allocating array if needed, I doubt it
+  public Var<?>[] distinctVars(Object term) {
+    final Var<?>[] tempArray = new Var[100]; // Enough for the moment - we could plan an auto-allocating array if needed, I doubt it
     final int[] nbVars = new int[]{0};
 
     final TermVisitor<Void> findVarsVisitor = new TermVisitor<Void>() {
       @Override
-      public Void visit(Var theVar) {
+      public Void visit(Var<?> theVar) {
         if (!theVar.isAnon()) {
           // Insert into array (even if may duplicate) - this will act as a sentinel
           final int highest = nbVars[0];
@@ -443,7 +443,7 @@ public class TermApi {
       }
 
       @Override
-      public Void visit(Struct theStruct) {
+      public Void visit(Struct<?> theStruct) {
         // Recurse through children
         final Object[] args = theStruct.getArgs();
         for (final Object arg : args) {
