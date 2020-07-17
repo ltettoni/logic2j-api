@@ -160,6 +160,7 @@ public class Struct<T> extends Term implements Cloneable {
   public static Object atom(String functor) {
     // Search in the catalog of atoms for exact match
     final String iFunctor = functor.intern();
+    //noinspection StringEquality - we internalized strings so it is licit to copmare references
     final boolean specialAtomRequiresStruct = iFunctor == Struct.FUNCTOR_CUT || iFunctor == Struct.FUNCTOR_TRUE || iFunctor == Struct.FUNCTOR_FALSE;
     if (!specialAtomRequiresStruct) {
       // We can return an internalized String

@@ -106,6 +106,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
       throw new InvalidTermException("Name of a variable may not be the empty or whitespace String");
     }
     this.name = str.intern();
+    //noinspection StringEquality - we internalized strings so it is licit to copmare references
     if (this.name == Var.ANONYMOUS_VAR_NAME) {
       throw new InvalidTermException("Must not instantiate an anonymous variable (which is a singleton)!");
     }
@@ -184,6 +185,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
    * @throws InvalidTermException If you try to clone the anonymous variable!
    */
   public static <Q> Var<Q> copy(Var<Q> original) {
+    //noinspection StringEquality - we internalized strings so it is licit to copmare references
     if (original.name == Var.ANONYMOUS_VAR_NAME) {
       throw new InvalidTermException("Cannot clone the anonymous variable via a copy constructor!");
     }
@@ -215,6 +217,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
    * Tests if this variable is anonymous.
    */
   public boolean isAnon() {
+    //noinspection StringEquality - we internalized strings so it is licit to copmare references
     return this == ANONYMOUS_VAR || this.name == ANONYMOUS_VAR_NAME; // Names are {@link String#intern()}alized so OK to check by reference
   }
 
@@ -311,6 +314,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
       return false;
     }
     final Var<?>that = (Var<?>) other;
+    //noinspection StringEquality - we internalized strings so it is licit to copmare references
     return this.getName() == that.getName() && this.getIndex() == that.getIndex(); // Names are {@link String#intern()}alized so OK to check by reference
   }
 

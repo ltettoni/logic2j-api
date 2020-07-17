@@ -52,6 +52,7 @@ public class TermApi {
       throw new InvalidTermException(message);
     }
     final Struct<?> s = (Struct<?>) term;
+    //noinspection StringEquality - we internalized strings so it is licit to copmare references
     if (functor != null && s.getName() != functor) {
       throw new InvalidTermException("Got a Struct of wrong functor \"" + s.getName() + "\" instead of " + functorSpec + " and " + aritySpec);
     }
@@ -210,12 +211,14 @@ public class TermApi {
    * @return A {@link Var} with the specified name, or null when not found.
    */
   public Var<?>findVar(Object term, String varName) {
+    //noinspection StringEquality - we internalized strings so it is licit to copmare references
     if (varName == Var.WHOLE_SOLUTION_VAR_NAME) {
       return Var.WHOLE_SOLUTION_VAR;
     }
     if (term instanceof Struct) {
       return ((Struct<?>) term).findVar(varName);
-    } else if (term instanceof Var<?> && ((Var<?>) term).getName() == varName) {
+    } else //noinspection StringEquality - we internalized strings so it is licit to copmare references
+      if (term instanceof Var<?> && ((Var<?>) term).getName() == varName) {
       return (Var<?>) term;
     } else {
       // Not a Term but a plain Java object - no var
