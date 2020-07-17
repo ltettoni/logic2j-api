@@ -23,7 +23,7 @@ import org.logic2j.engine.model.TermApi;
 /**
  * Extension of the {@link TermVisitor} for type of classes that are NOT
  * subclasses of {@link Term}.
- * This requires calling {@link TermApi#accept(ExtendedTermVisitor, Object theTerm)}
+ * This requires calling {@link TermApi#accept(ExtendedTermVisitor, Object term)}
  */
 public interface ExtendedTermVisitor<T> extends TermVisitor<T> {
 

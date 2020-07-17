@@ -43,80 +43,80 @@ public class TermApi {
   private static final Pattern ATOM_PATTERN = Pattern.compile("(!|[a-z][a-zA-Z_0-9]*)");
 
   // TODO Currently unused but we probably should use an assertion method with very clean error handling as this one
-  private static Struct<?> requireStruct(Object theTerm, String theFunctor, int theArity) {
-    final String functorSpec = theFunctor != null ? "functor \"" + theFunctor + '"' : "any functor";
-    final String aritySpec = theArity >= 0 ? "arity=" + theArity : "any arity";
-    if (!(theTerm instanceof Struct)) {
+  private static Struct<?> requireStruct(Object term, String functor, int arity) {
+    final String functorSpec = functor != null ? "functor \"" + functor + '"' : "any functor";
+    final String aritySpec = arity >= 0 ? "arity=" + arity : "any arity";
+    if (!(term instanceof Struct)) {
       final String message =
-              "A Struct of " + functorSpec + " and " + aritySpec + " was expected, got instead: " + theTerm + " of class " + theTerm.getClass().getName();
+              "A Struct of " + functorSpec + " and " + aritySpec + " was expected, got instead: " + term + " of class " + term.getClass().getName();
       throw new InvalidTermException(message);
     }
-    final Struct<?> s = (Struct<?>) theTerm;
-    if (theFunctor != null && s.getName() != theFunctor) {
+    final Struct<?> s = (Struct<?>) term;
+    if (functor != null && s.getName() != functor) {
       throw new InvalidTermException("Got a Struct of wrong functor \"" + s.getName() + "\" instead of " + functorSpec + " and " + aritySpec);
     }
-    if (theArity >= 0 && s.getArity() != theArity) {
+    if (arity >= 0 && s.getArity() != arity) {
       throw new InvalidTermException("Got a Struct of wrong arity (" + s.getArity() + ") instead of " + aritySpec);
     }
     return s;
   }
 
   /**
-   * Apply a {@link ExtendedTermVisitor} to visit theTerm.
+   * Apply a {@link ExtendedTermVisitor} to visit term.
    *
-   * @param theVisitor
-   * @param theTerm
-   * @return The transformed result as per theVisitor's logic
+   * @param visitor
+   * @param term
+   * @return The transformed result as per visitor's logic
    */
-  public <T> T accept(ExtendedTermVisitor<T> theVisitor, Object theTerm) {
+  public <T> T accept(ExtendedTermVisitor<T> visitor, Object term) {
     // Most common cases are Struct and Var, handled by super interface TermVisitor
-    if (theTerm instanceof Struct) {
-      return theVisitor.visit((Struct<?>) theTerm);
+    if (term instanceof Struct) {
+      return visitor.visit((Struct<?>) term);
     }
-    if (theTerm instanceof Var) {
-      return theVisitor.visit((Var<?>) theTerm);
+    if (term instanceof Var) {
+      return visitor.visit((Var<?>) term);
     }
     // Other possible cases require instanceof since any Object can be
-    if (theTerm instanceof String) {
-      return theVisitor.visit((String) theTerm);
+    if (term instanceof String) {
+      return visitor.visit((String) term);
     }
-    return theVisitor.visit(theTerm);
+    return visitor.visit(term);
   }
 
-  public boolean isAtom(Object theTerm) {
-    if (theTerm instanceof String) {
+  public boolean isAtom(Object term) {
+    if (term instanceof String) {
       // Now plain Strings are atoms!
       return true;
     }
-    if (theTerm instanceof Struct) {
-      final Struct<?> s = (Struct<?>) theTerm;
+    if (term instanceof Struct) {
+      final Struct<?> s = (Struct<?>) term;
       return s.getArity() == 0;
     }
     return false;
   }
 
-  public boolean isAtomic(Object theTerm) {
-    return isAtom(theTerm) || theTerm instanceof Number;
+  public boolean isAtomic(Object term) {
+    return isAtom(term) || term instanceof Number;
   }
 
   /**
    * Check free variable (incl. anonymous)
    *
-   * @param theTerm
-   * @return true if theTerm denotes a free variable, or the anonymous variable.
+   * @param term
+   * @return true if term denotes a free variable, or the anonymous variable.
    */
-  public boolean isFreeVar(Object theTerm) {
-    return theTerm instanceof Var;
+  public boolean isFreeVar(Object term) {
+    return term instanceof Var;
   }
 
   /**
    * Check free variable (not including anonymous)
    *
-   * @param theTerm
-   * @return true if theTerm denotes a free variable, but not anonymous variable.
+   * @param term
+   * @return true if term denotes a free variable, but not anonymous variable.
    */
-  public boolean isFreeNamedVar(Object theTerm) {
-    return theTerm instanceof Var<?>&& Var.anon() != theTerm;
+  public boolean isFreeNamedVar(Object term) {
+    return term instanceof Var<?>&& Var.anon() != term;
   }
 
   /**
@@ -127,28 +127,28 @@ public class TermApi {
    *
    * @param collection Recipient collection, {@link Term}s add here.
    */
-  public void collectTermsInto(Object theTerm, Collection<Object> collection) {
-    if (theTerm instanceof Struct) {
-      ((Struct<?>) theTerm).collectTermsInto(collection);
-    } else if (theTerm instanceof Var) {
-      ((Var<?>) theTerm).collectTermsInto(collection);
+  public void collectTermsInto(Object term, Collection<Object> collection) {
+    if (term instanceof Struct) {
+      ((Struct<?>) term).collectTermsInto(collection);
+    } else if (term instanceof Var) {
+      ((Var<?>) term).collectTermsInto(collection);
     } else {
       // Not a Term but a plain Java object
-      collection.add(theTerm);
+      collection.add(term);
     }
   }
 
   /**
-   * Recursively collect all terms at and under theTerm, and also reinit their Term.index to {@link Term#NO_INDEX}. For
+   * Recursively collect all terms at and under term, and also reinit their Term.index to {@link Term#NO_INDEX}. For
    * example for a
    * structure "s(a,b(c),d(b(a)),X,X,Y)", the result Collection will hold [a, c, b(c), b(a), c(b(a)), X, X, Y]
    *
-   * @param theTerm
+   * @param term
    * @return A collection of terms, never empty. Same terms may appear multiple times.
    */
-  public Collection<Object> collectTerms(Object theTerm) {
+  public Collection<Object> collectTerms(Object term) {
     final ArrayList<Object> recipient = new ArrayList<>();
-    collectTermsInto(theTerm, recipient);
+    collectTermsInto(term, recipient);
     // Remove ourself from the result - we are always at the end of the collection
     recipient.remove(recipient.size() - 1);
     return recipient;
@@ -158,12 +158,12 @@ public class TermApi {
    * Factorize a {@link Term}, this means recursively traversing the {@link Term} structure and assigning any duplicates substructures to
    * the same references.
    *
-   * @param theTerm
-   * @return The factorized term, may be same as argument theTerm in case nothing was needed, or a new object.
+   * @param term
+   * @return The factorized term, may be same as argument term in case nothing was needed, or a new object.
    */
-  public <T> T factorize(T theTerm) {
-    final Collection<Object> collection = collectTerms(theTerm);
-    return (T) factorize(theTerm, collection);
+  public <T> T factorize(T term) {
+    final Collection<Object> collection = collectTerms(term);
+    return (T) factorize(term, collection);
   }
 
   /**
@@ -174,14 +174,14 @@ public class TermApi {
    *
    * @return Either this, or a new equivalent but factorized Term.
    */
-  public Object factorize(Object theTerm, Collection<Object> collection) {
-    if (theTerm instanceof Struct) {
-      return ((Struct<?>) theTerm).factorize(collection);
-    } else if (theTerm instanceof Var) {
-      return ((Var<?>) theTerm).factorize(collection);
+  public Object factorize(Object term, Collection<Object> collection) {
+    if (term instanceof Struct) {
+      return ((Struct<?>) term).factorize(collection);
+    } else if (term instanceof Var) {
+      return ((Var<?>) term).factorize(collection);
     } else {
       // Not a Term but a plain Java object - won't factorize
-      return theTerm;
+      return term;
     }
   }
 
@@ -192,31 +192,31 @@ public class TermApi {
    * @param theOther
    * @return true when theOther is structurally equal to this. Same references (==) will always yield true.
    */
-  public boolean structurallyEquals(Object theTerm, Object theOther) {
-    if (theTerm instanceof Struct) {
-      return ((Struct<?>) theTerm).structurallyEquals(theOther);
-    } else if (theTerm instanceof Var) {
-      return ((Var<?>) theTerm).structurallyEquals(theOther);
+  public boolean structurallyEquals(Object term, Object theOther) {
+    if (term instanceof Struct) {
+      return ((Struct<?>) term).structurallyEquals(theOther);
+    } else if (term instanceof Var) {
+      return ((Var<?>) term).structurallyEquals(theOther);
     } else {
       // Not a Term but a plain Java object - calculate equality
-      return theTerm.equals(theOther);
+      return term.equals(theOther);
     }
   }
 
   /**
    * Find the first instance of {@link Var} by name inside a Term, most often a {@link Struct}.
    *
-   * @param theVariableName
+   * @param varName
    * @return A {@link Var} with the specified name, or null when not found.
    */
-  public Var<?>findVar(Object theTerm, String theVariableName) {
-    if (theVariableName == Var.WHOLE_SOLUTION_VAR_NAME) {
+  public Var<?>findVar(Object term, String varName) {
+    if (varName == Var.WHOLE_SOLUTION_VAR_NAME) {
       return Var.WHOLE_SOLUTION_VAR;
     }
-    if (theTerm instanceof Struct) {
-      return ((Struct<?>) theTerm).findVar(theVariableName);
-    } else if (theTerm instanceof Var<?> && ((Var<?>) theTerm).getName() == theVariableName) {
-      return (Var<?>) theTerm;
+    if (term instanceof Struct) {
+      return ((Struct<?>) term).findVar(varName);
+    } else if (term instanceof Var<?> && ((Var<?>) term).getName() == varName) {
+      return (Var<?>) term;
     } else {
       // Not a Term but a plain Java object - no var
       return null;
@@ -227,18 +227,18 @@ public class TermApi {
    * Assign the Term.index value for {@link Var} and {@link Struct}s.
    * Will recurse through Struct.
    *
-   * @param theIndexOfNextNonIndexedVar
-   * @return The next value for theIndexOfNextNonIndexedVar, allow successive calls to increment. First caller
+   * @param indexOfNextNonIndexedVar
+   * @return The next value for indexOfNextNonIndexedVar, allow successive calls to increment. First caller
    * must pass 0.
    */
-  public int assignIndexes(Object theTerm, int theIndexOfNextNonIndexedVar) {
-    if (theTerm instanceof Struct) {
-      return ((Struct<?>) theTerm).assignIndexes(theIndexOfNextNonIndexedVar);
-    } else if (theTerm instanceof Var) {
-      return ((Var<?>) theTerm).assignIndexes(theIndexOfNextNonIndexedVar);
+  public int assignIndexes(Object term, int indexOfNextNonIndexedVar) {
+    if (term instanceof Struct) {
+      return ((Struct<?>) term).assignIndexes(indexOfNextNonIndexedVar);
+    } else if (term instanceof Var) {
+      return ((Var<?>) term).assignIndexes(indexOfNextNonIndexedVar);
     } else {
       // Not a Term but a plain Java object - can't assign an index
-      return theIndexOfNextNonIndexedVar;
+      return indexOfNextNonIndexedVar;
     }
   }
 
@@ -247,11 +247,11 @@ public class TermApi {
    *
    * @return The predicate's name + '/' + arity for normal {@link Struct}, or just the toString() of any other Object
    */
-  public String predicateSignature(Object thePredicate) {
-    if (thePredicate instanceof Struct) {
-      return ((Struct<?>) thePredicate).getPredicateSignature();
+  public String predicateSignature(Object predicate) {
+    if (predicate instanceof Struct) {
+      return ((Struct<?>) predicate).getPredicateSignature();
     }
-    return thePredicate + "/0";
+    return predicate + "/0";
   }
 
   public String functorFromSignature(String signature) {
@@ -273,25 +273,25 @@ public class TermApi {
   /**
    * Quote atoms if needed.
    *
-   * @param theText
+   * @param text
    * @return theText, quoted if necessary (typically "X" will become "'X'" whereas "x" will remain unchanged.
    * Null will return null. The empty string will become "''". If not quoted, the same reference (theText) is returned.
    */
-  public CharSequence quoteIfNeeded(CharSequence theText) {
-    if (theText == null) {
+  public CharSequence quoteIfNeeded(CharSequence text) {
+    if (text == null) {
       return null;
     }
-    if (theText.length() == 0) {
+    if (text.length() == 0) {
       // Probably that the empty string is not allowed in regular Prolog
       return "''";
     }
-    final String textAsString = theText.toString();
+    final String textAsString = text.toString();
     final boolean needQuote =
-            /* Fast check */ !Character.isLowerCase(theText.charAt(0)) ||
+            /* Fast check */ !Character.isLowerCase(text.charAt(0)) ||
             /* For numbers */ textAsString.indexOf('.') >= 0 ||
             /* Much slower */ !ATOM_PATTERN.matcher(textAsString).matches();
     if (needQuote) {
-      final StringBuilder sb = new StringBuilder(theText.length() + 2);
+      final StringBuilder sb = new StringBuilder(text.length() + 2);
       sb.append(Struct.QUOTE); // Opening quote
       for (final char c : textAsString.toCharArray()) {
         sb.append(c);
@@ -302,7 +302,7 @@ public class TermApi {
       sb.append(Struct.QUOTE); // Closing quote
       return sb;
     }
-    return theText;
+    return text;
   }
 
   public <T> String formatStruct(Struct<T> struct) {
@@ -325,20 +325,20 @@ public class TermApi {
   }
 
   // TODO Currently unused - but probably we should detect cycles!
-  void avoidCycle(Struct<?> theClause) {
+  void avoidCycle(Struct<?> clause) {
     final List<Term> visited = new ArrayList<>(20);
-    theClause.avoidCycle(visited);
+    clause.avoidCycle(visited);
   }
 
   /**
    * Normalize a term, NOT taking into account existing operators and primitives.
    * In principle this method should not be used. Side-effect (execution) of primitives is not guaranteed to occur.
    *
-   * @param theTerm To be normalized
-   * @return A normalized COPY of theTerm ready to be used for inference (in a Theory ore as a goal)
+   * @param term To be normalized
+   * @return A normalized COPY of term ready to be used for inference (in a Theory ore as a goal)
    */
-  public Object normalize(Object theTerm) {
-    final Object factorized = factorize(theTerm);
+  public Object normalize(Object term) {
+    final Object factorized = factorize(term);
     assignIndexes(factorized, 0);
     return factorized;
   }
@@ -351,31 +351,31 @@ public class TermApi {
    * when starting with an underscore or an uppercase, this is a {@link Var}.
    * This method is not capable of instantiating a compound {@link Struct}, it may only create atoms.
    *
-   * @param theObject Should usually be {@link CharSequence}, {@link Number}, {@link Boolean}
+   * @param anyObject Should usually be {@link CharSequence}, {@link Number}, {@link Boolean}
    * @return An instance of a subclass of {@link Term}.
    * @throws InvalidTermException If theObject cannot be converted to a Term
    */
-  public Object valueOf(Object theObject) {
-    if (theObject == null) {
+  public Object valueOf(Object anyObject) {
+    if (anyObject == null) {
       throw new InvalidTermException("Cannot create Term from a null argument");
     }
     final Object result;
-    if (theObject instanceof Term) {
+    if (anyObject instanceof Term) {
       // Idempotence
-      result = theObject;
-    } else if (theObject instanceof Integer) {
-      result = theObject;
-    } else if (theObject instanceof Long) {
-      result = ((Long) theObject).intValue();
-    } else if (theObject instanceof Float) {
-      result = ((Float) theObject).doubleValue();
-    } else if (theObject instanceof Double) {
-      result = theObject;
-    } else if (theObject instanceof Boolean) {
-      result = (Boolean) theObject ? Struct.ATOM_TRUE : Struct.ATOM_FALSE;
-    } else if (theObject instanceof CharSequence || theObject instanceof Character) {
+      result = anyObject;
+    } else if (anyObject instanceof Integer) {
+      result = anyObject;
+    } else if (anyObject instanceof Long) {
+      result = ((Long) anyObject).intValue();
+    } else if (anyObject instanceof Float) {
+      result = ((Float) anyObject).doubleValue();
+    } else if (anyObject instanceof Double) {
+      result = anyObject;
+    } else if (anyObject instanceof Boolean) {
+      result = (Boolean) anyObject ? Struct.ATOM_TRUE : Struct.ATOM_FALSE;
+    } else if (anyObject instanceof CharSequence || anyObject instanceof Character) {
       // Very very vary rudimentary parsing
-      final String chars = theObject.toString();
+      final String chars = anyObject.toString();
 
       if (Var.ANONYMOUS_VAR_NAME.equals(chars)) {
         result = Var.anon();
@@ -391,9 +391,9 @@ public class TermApi {
         // Otherwise it's an atom
         result = chars.intern();
       }
-    } else if (theObject instanceof Number) {
+    } else if (anyObject instanceof Number) {
       // Other types of numbers
-      final Number nbr = (Number) theObject;
+      final Number nbr = (Number) anyObject;
       if (nbr.doubleValue() % 1 != 0) {
         // Has floating point number
         result = nbr.doubleValue();
@@ -401,12 +401,12 @@ public class TermApi {
         // Is just an integer
         result = nbr.longValue();
       }
-    } else if (theObject instanceof Enum<?>) {
+    } else if (anyObject instanceof Enum<?>) {
       // Enums are just valid terms
-      result = theObject;
+      result = anyObject;
     } else {
       // POJOs are also valid terms now
-      result = theObject;
+      result = anyObject;
     }
     return result;
   }

@@ -139,12 +139,12 @@ public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
   /**
    * Collect solutions into a user-specified {@link Collection}
    *
-   * @param theTargetToAddTo The target collection (with user-chosen semantics) where all solutions should be added to.
+   * @param targetToAddTo The target collection (with user-chosen semantics) where all solutions should be added to.
    * @return the argument "theTargetToAddTo"
    */
-  default <R extends Collection<T>> R addTo(R theTargetToAddTo) {
-    theTargetToAddTo.addAll(list());
-    return theTargetToAddTo;
+  default <R extends Collection<T>> R addTo(R targetToAddTo) {
+    targetToAddTo.addAll(list());
+    return targetToAddTo;
   }
 
   default Stream<T> stream() {

@@ -22,12 +22,12 @@ package org.logic2j.engine.exception;
 public abstract class Logic2jException extends RuntimeException {
   private static final long serialVersionUID = 1L;
 
-  public Logic2jException(CharSequence theMessage) {
-    super(theMessage.toString());
+  public Logic2jException(CharSequence message) {
+    super(message.toString());
   }
 
-  public Logic2jException(CharSequence theMessage, Throwable theRootCause) {
-    super(theMessage.toString(), theRootCause);
+  public Logic2jException(CharSequence message, Throwable rootCause) {
+    super(message.toString(), rootCause);
   }
 
 }

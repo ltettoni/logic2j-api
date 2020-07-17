@@ -24,12 +24,12 @@ public class InvalidTermException extends Logic2jException {
 
   private static final long serialVersionUID = -4416801118548866803L;
 
-  public InvalidTermException(String theString) {
-    super(theString);
+  public InvalidTermException(String message) {
+    super(message);
   }
 
-  public InvalidTermException(String theString, Throwable theRootCause) {
-    super(theString, theRootCause);
+  public InvalidTermException(String message, Throwable rootCause) {
+    super(message, rootCause);
   }
 
 }

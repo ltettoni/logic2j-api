@@ -106,23 +106,23 @@ public class Struct<T> extends Term implements Cloneable {
   /**
    * Low-level constructor.
    *
-   * @param theFunctor
-   * @param theArity
+   * @param functor
+   * @param arity
    */
-  private Struct(String theFunctor, int theArity) {
-    setNameAndArity(theFunctor, theArity);
+  private Struct(String functor, int arity) {
+    setNameAndArity(functor, arity);
     // When arity is zero, don't even bother to allocate arguments!
     if (this.arity > 0) {
       this.args = new Object[this.arity];
     }
   }
 
-  public Struct(String theFunctor, Object... argList) {
-    this(theFunctor, argList.length);
+  public Struct(String functor, Object... argList) {
+    this(functor, argList.length);
     int i = 0;
     for (final Object element : argList) {
       if (element == null) {
-        throw new InvalidTermException("Cannot create Struct \"" + theFunctor + Arrays.asList(argList) + "\", found null argument at index " + i);
+        throw new InvalidTermException("Cannot create Struct \"" + functor + Arrays.asList(argList) + "\", found null argument at index " + i);
       }
       this.args[i++] = element;
     }
@@ -153,19 +153,19 @@ public class Struct<T> extends Term implements Cloneable {
   /**
    * Obtain an atom from the catalog if it pre-existed, or create one an register in the catalog.
    *
-   * @param theFunctor
+   * @param functor
    * @return Either a new one created or an existing one. It's actually either a String (if it can be),
    * but can be also a Struct of zero-arity for special functors such as "true", "false"
    */
-  public static Object atom(String theFunctor) {
+  public static Object atom(String functor) {
     // Search in the catalog of atoms for exact match
-    final String functor = theFunctor.intern();
-    final boolean specialAtomRequiresStruct = functor == Struct.FUNCTOR_CUT || functor == Struct.FUNCTOR_TRUE || functor == Struct.FUNCTOR_FALSE;
+    final String iFunctor = functor.intern();
+    final boolean specialAtomRequiresStruct = iFunctor == Struct.FUNCTOR_CUT || iFunctor == Struct.FUNCTOR_TRUE || iFunctor == Struct.FUNCTOR_FALSE;
     if (!specialAtomRequiresStruct) {
       // We can return an internalized String
-      return functor;
+      return iFunctor;
     }
-    return new Struct<>(functor, 0);
+    return new Struct<>(iFunctor, 0);
   }
 
   /**
@@ -175,8 +175,8 @@ public class Struct<T> extends Term implements Cloneable {
    * @note This method is a static factory, not a constructor, to emphasize that arguments
    * are not of the type needed by this class, but need transformation.
    */
-  public static Struct<?> valueOf(String theFunctor, Object... argList) {
-    final Struct<?> newInstance = new Struct<>(theFunctor, argList.length);
+  public static Struct<?> valueOf(String functor, Object... argList) {
+    final Struct<?> newInstance = new Struct<>(functor, argList.length);
     int i = 0;
     for (final Object element : argList) {
       newInstance.args[i++] = termApi().valueOf(element);
@@ -208,25 +208,25 @@ public class Struct<T> extends Term implements Cloneable {
 
   /**
    * Set Term.index to {@link Term#NO_INDEX}, recursively collect all argument's terms first,
-   * then finally add this {@link Struct} to theCollectedTerms.
+   * then finally add this {@link Struct} to collectedTerms.
    * The functor alone (without its children) is NOT collected as a term. An atom is collected as itself.
    *
-   * @param theCollectedTerms
+   * @param collectedTerms
    */
-  void collectTermsInto(Collection<Object> theCollectedTerms) {
+  void collectTermsInto(Collection<Object> collectedTerms) {
     clearIndex();
     if (this.arity > 0) {
-      Arrays.stream(this.args).forEach(child -> termApi().collectTermsInto(child, theCollectedTerms));
+      Arrays.stream(this.args).forEach(child -> termApi().collectTermsInto(child, collectedTerms));
     }
-    theCollectedTerms.add(this);
+    collectedTerms.add(this);
   }
 
-  Object factorize(Collection<Object> theCollectedTerms) {
+  Object factorize(Collection<Object> collectedTerms) {
     // Recursively factorize all arguments of this Struct
     final Object[] newArgs = new Object[this.arity];
     boolean anyChange = false;
     for (int i = 0; i < this.arity; i++) {
-      newArgs[i] = termApi().factorize(this.args[i], theCollectedTerms);
+      newArgs[i] = termApi().factorize(this.args[i], collectedTerms);
       anyChange |= (newArgs[i] != this.args[i]);
     }
     // Now initialize result - a new Struct only if any change was found below
@@ -238,17 +238,17 @@ public class Struct<T> extends Term implements Cloneable {
       factorized = this;
     }
     // If this Struct already has an equivalent in the provided collection, return that one
-    final Object betterEquivalent = factorized.findStructurallyEqualWithin(theCollectedTerms);
+    final Object betterEquivalent = factorized.findStructurallyEqualWithin(collectedTerms);
     if (betterEquivalent != null) {
       return betterEquivalent;
     }
     return factorized;
   }
 
-  Var<?>findVar(String theVariableName) {
+  Var<?>findVar(String varName) {
     for (int i = 0; i < this.arity; i++) {
       final Object term = this.args[i];
-      final Var<?>found = termApi().findVar(term, theVariableName);
+      final Var<?>found = termApi().findVar(term, varName);
       if (found != null) {
         return found;
       }
@@ -284,18 +284,18 @@ public class Struct<T> extends Term implements Cloneable {
   /**
    * Write major properties of the Struct, and also calculate read-only indexing signature for efficient access.
    *
-   * @param theFunctor whose named is internalized by {@link String#intern()}
-   * @param theArity
+   * @param functor whose named is internalized by {@link String#intern()}
+   * @param arity
    */
-  private void setNameAndArity(String theFunctor, int theArity) {
-    if (theFunctor == null) {
+  private void setNameAndArity(String functor, int arity) {
+    if (functor == null) {
       throw new InvalidTermException("The functor of a Struct cannot be null");
     }
-    if (theFunctor.isEmpty() && theArity > 0) {
+    if (functor.isEmpty() && arity > 0) {
       throw new InvalidTermException("The functor of a non-atom Struct cannot be an empty string");
     }
-    this.name = theFunctor.intern();
-    this.arity = theArity;
+    this.name = functor.intern();
+    this.arity = arity;
     this.signature = (this.getName() + '/' + this.arity).intern();
   }
 
@@ -314,12 +314,11 @@ public class Struct<T> extends Term implements Cloneable {
   }
 
   /**
-   * Gets the i-th element of this structure
-   * <p/>
-   * No bound check is done
+   * @return the i-th element of this structure
+   * @note No bound check is done
    */
-  public Object getArg(int theIndex) {
-    return this.args[theIndex];
+  public Object getArg(int argIndex) {
+    return this.args[argIndex];
   }
 
   /**
@@ -369,8 +368,8 @@ public class Struct<T> extends Term implements Cloneable {
   // ---------------------------------------------------------------------------
 
   @Override
-  public <R> R accept(TermVisitor<R> theVisitor) {
-    return theVisitor.visit(this);
+  public <R> R accept(TermVisitor<R> visitor) {
+    return visitor.visit(this);
   }
 
 
@@ -386,14 +385,14 @@ public class Struct<T> extends Term implements Cloneable {
    * traversal. The first Vars encountered in sequence will receive indexes 0, 1, 2. Therefore a term such as
    * goal(A, Z, Y) will guarantee that indexes are: A=0, Z=1, Y=2.
    */
-  int assignIndexes(int theIndexOfNextNonIndexedVar) {
+  int assignIndexes(int indexOfNextNonIndexedVar) {
     if (hasIndex()) {
       // Already assigned, do nothing and return the argument since we did
       // not assigned anything new
-      return theIndexOfNextNonIndexedVar;
+      return indexOfNextNonIndexedVar;
     }
     // Recursive assignment
-    int runningIndex = theIndexOfNextNonIndexedVar;
+    int runningIndex = indexOfNextNonIndexedVar;
     for (int i = 0; i < this.arity; i++) {
       runningIndex = termApi().assignIndexes(this.args[i], runningIndex);
     }

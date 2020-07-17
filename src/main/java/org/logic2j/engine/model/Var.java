@@ -93,15 +93,15 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
    * <p/>
    * The name must starts with an upper case letter or the underscore. If an underscore is specified as a name, the variable is anonymous.
    *
-   * @param theName is the name
+   * @param varName is the name
    * @throws InvalidTermException if n is not a valid Prolog variable name
    * @note Internally the {@link #name} is {@link String#intern()}alized so it's OK to compare by reference.
    */
-  public Var(Class<T> theType, CharSequence theName) {
-    if (theName == null) {
+  public Var(Class<T> type, CharSequence varName) {
+    if (varName == null) {
       throw new InvalidTermException("Name of a variable cannot be null");
     }
-    final String str = theName.toString();
+    final String str = varName.toString();
     if (str.trim().isEmpty()) {
       throw new InvalidTermException("Name of a variable may not be the empty or whitespace String");
     }
@@ -109,17 +109,17 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
     if (this.name == Var.ANONYMOUS_VAR_NAME) {
       throw new InvalidTermException("Must not instantiate an anonymous variable (which is a singleton)!");
     }
-    this.type = theType;
+    this.type = type;
   }
 
   /**
    * Auto-named variable. The name will be "_n" with N a unique sequence number per this JVM.
    *
-   * @param theType
+   * @param type
    * @return
    */
-  public Var(Class<T> theType) {
-    this(theType, nextAutomaticName());
+  public Var(Class<T> type) {
+    this(type, nextAutomaticName());
   }
 
   private static CharSequence nextAutomaticName() {
@@ -227,8 +227,8 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
   // ---------------------------------------------------------------------------
 
   @Override
-  public <R> R accept(TermVisitor<R> theVisitor) {
-    return theVisitor.visit(this);
+  public <R> R accept(TermVisitor<R> visitor) {
+    return visitor.visit(this);
   }
 
   // ---------------------------------------------------------------------------
@@ -236,25 +236,25 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
   // ---------------------------------------------------------------------------
 
   /**
-   * Just add this to theCollectedTerms and set Term.index to {@link Term#NO_INDEX}.
+   * Just add this to collectedTerms and set Term.index to {@link Term#NO_INDEX}.
    *
-   * @param theCollectedTerms
+   * @param collectedTerms
    */
-  void collectTermsInto(Collection<Object> theCollectedTerms) {
+  void collectTermsInto(Collection<Object> collectedTerms) {
     clearIndex();
-    theCollectedTerms.add(this);
+    collectedTerms.add(this);
   }
 
 
-  Object factorize(Collection<Object> theCollectedTerms) {
+  Object factorize(Collection<Object> collectedTerms) {
     // If this term already has an equivalent in the provided collection, return that one
-    final Object alreadyThere = findStructurallyEqualWithin(theCollectedTerms);
+    final Object alreadyThere = findStructurallyEqualWithin(collectedTerms);
     if (alreadyThere != null) {
       return alreadyThere;
     }
     // Not found by structural equality, we match variables by their name
     // TODO I'm not actually sure why we do this - we should probably log and identify why this case
-    for (final Object term : theCollectedTerms) {
+    for (final Object term : collectedTerms) {
       if (term instanceof Var) {
         final Var<?>var = (Var<?>) term;
         if (getName().equals(var.getName())) {
@@ -277,20 +277,20 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
   /**
    * Assign a new index to a Var if it was not assigned before.
    */
-  int assignIndexes(int theIndexOfNextNonIndexedVar) {
+  int assignIndexes(int indexOfNextNonIndexedVar) {
     if (hasIndex()) {
       // Already assigned, avoid changing the index! Do nothing
-      return theIndexOfNextNonIndexedVar; // return the argument, since we did not assign anything new
+      return indexOfNextNonIndexedVar; // return the argument, since we did not assign anything new
     }
     if (isAnon()) {
       // Anonymous variable is not a var, don't count it, but assign an
       // index that is different from NO_INDEX but that won't be ever used
       setIndex(ANON_INDEX);
-      return theIndexOfNextNonIndexedVar; // return same index since we did nothing
+      return indexOfNextNonIndexedVar; // return same index since we did nothing
     }
     // Index this var
-    setIndex(theIndexOfNextNonIndexedVar);
-    return theIndexOfNextNonIndexedVar + 1;
+    setIndex(indexOfNextNonIndexedVar);
+    return indexOfNextNonIndexedVar + 1;
   }
 
   // ---------------------------------------------------------------------------

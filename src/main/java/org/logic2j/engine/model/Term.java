@@ -79,7 +79,7 @@ public abstract class Term implements Serializable {
   // TermVisitor
   // ---------------------------------------------------------------------------
 
-  public abstract <R> R accept(TermVisitor<R> theVisitor);
+  public abstract <R> R accept(TermVisitor<R> visitor);
 
 
   // ---------------------------------------------------------------------------
