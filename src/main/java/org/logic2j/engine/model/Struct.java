@@ -172,7 +172,7 @@ public class Struct<T> extends Term implements Cloneable {
    * Factory to builds a compound, with non-{@link Term} arguments that will be converted
    * by {@link TermApi#valueOf(Object)}.
    *
-   * @note This method is a static factory, not a constructor, to emphasize that arguments
+   * Note: This method is a static factory, not a constructor, to emphasize that arguments
    * are not of the type needed by this class, but need transformation.
    */
   public static Struct<?> valueOf(String functor, Object... argList) {
@@ -315,7 +315,7 @@ public class Struct<T> extends Term implements Cloneable {
 
   /**
    * @return the i-th element of this structure
-   * @note No bound check is done
+   * Note: No bound check is done
    */
   public Object getArg(int argIndex) {
     return this.args[argIndex];
@@ -381,7 +381,7 @@ public class Struct<T> extends Term implements Cloneable {
    * For {@link Struct}s, the Term.index will be the maximal index of any variables that can be found, recursively, under all
    * children arguments.
    *
-   * @note Assigning indexes, for example with a base index of 0, will proceed sequentially by depth-first
+   * Note: Assigning indexes, for example with a base index of 0, will proceed sequentially by depth-first
    * traversal. The first Vars encountered in sequence will receive indexes 0, 1, 2. Therefore a term such as
    * goal(A, Z, Y) will guarantee that indexes are: A=0, Z=1, Y=2.
    */
@@ -458,7 +458,7 @@ public class Struct<T> extends Term implements Cloneable {
 
   /**
    * @param other
-   * @return Structures are {@link #equals(Object)} if other is a Struct of same arity, name, and all params are equal too.
+   * @return true if other is a Struct of same arity, name, and all params are equal too.
    */
   @Override
   public boolean equals(Object other) {

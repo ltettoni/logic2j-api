@@ -95,7 +95,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
    *
    * @param varName is the name
    * @throws InvalidTermException if n is not a valid Prolog variable name
-   * @note Internally the {@link #name} is {@link String#intern()}alized so it's OK to compare by reference.
+   * Note: Internally the {@link #name} is {@link String#intern()}alized so it's OK to compare by reference.
    */
   public Var(Class<T> type, CharSequence varName) {
     if (varName == null) {
@@ -114,9 +114,6 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
 
   /**
    * Auto-named variable. The name will be "_n" with N a unique sequence number per this JVM.
-   *
-   * @param type
-   * @return
    */
   public Var(Class<T> type) {
     this(type, nextAutomaticName());
@@ -203,7 +200,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
   /**
    * Gets the name of the variable.
    *
-   * @note Names are {@link String#intern()}alized so OK to check by reference (with ==)
+   * Note: Names are {@link String#intern()}alized so OK to check by reference (with ==)
    */
   public String getName() {
     return this.name;

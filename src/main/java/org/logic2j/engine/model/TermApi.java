@@ -34,9 +34,9 @@ import org.logic2j.engine.visitor.TermVisitor;
  * subclasses, so they can invoke its package-scoped methods. See important notes re. Term factorization ({@link #factorize(Object)}) and
  * normalization ({@link #normalize(Object)} .
  *
- * @note This class knows about the subclasses of {@link Term}, it breaks the OO design pattern a little but avoid defining many methods
+ * Note: This class knows about the subclasses of {@link Term}, it breaks the OO design pattern a little but avoid defining many methods
  * there. I find it acceptable since subclasses of {@link Term} don't sprout every day and are not for end-user extension.
- * @note Avoid static methods, prefer instantiating this class where needed.
+ * Note: Avoid static methods, prefer instantiating this class where needed.
  */
 public class TermApi {
 
