@@ -14,9 +14,10 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * Holds what results are desired by a client app until actually invoking any data generation.
- * Default implementation of most methods are provided - yet inefficient they will rely on
- * {@link #list()}.
+ * Holds which kind of results are desired by a client invoker, before actually invoking the generation of results.
+ * A default implementation is provided for most methods - yet they all rely on
+ * {@link #list()} so the default implementation is not efficient, and implementers of this interface may want to
+ * provide more efficient implementations.
  *
  * @param <T> Type of effective individual solutions
  */
@@ -27,20 +28,25 @@ public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
   // -----------------------------------------
 
   /**
-   * Check existence (presence of a solution)
+   * Check existence (presence of a solution).
    *
-   * @return true if at least one result available
+   * @return true if at least one result is available
    */
   default boolean isPresent() {
     return count() > 0;
   }
 
+  /**
+   * Check absence of solution.
+   *
+   * @return Opposite to {@link #isPresent()}
+   */
   default boolean isEmpty() {
     return !isPresent();
   }
 
   /**
-   * Check for optional single-value.
+   * Check for optional single-value: that there are no multiple solutions.
    *
    * @return true iff zero or one solution.
    */
@@ -49,7 +55,7 @@ public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
   }
 
   /**
-   * Check for mandatory single-value.
+   * Check for mandatory single-value: that there is exactly one solution.
    *
    * @return true iff exactly one solution.
    */
@@ -66,6 +72,9 @@ public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
     return count() > 1;
   }
 
+  /**
+   * @return Number of solutions.
+   */
   default int count() {
     return list().size();
   }
@@ -102,7 +111,8 @@ public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
   }
 
   /**
-   * @return Only value, never null, if more a produced an exception is thrown.
+   * @return Only value, never null, if no value is produced then an IllegalStateException is thrown.
+   * @throws IllegalStateException if there is no result
    */
   default T unique() {
     final List<T> list = list();
@@ -119,12 +129,15 @@ public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
 
   List<T> list();
 
+  /**
+   * @return All results as as {@link Set}
+   */
   default Set<T> set() {
     return addTo(new HashSet<>());
   }
 
   /**
-   * Collect solutions into a user-specified Collection
+   * Collect solutions into a user-specified {@link Collection}
    *
    * @param theTargetToAddTo The target collection (with user-chosen semantics) where all solutions should be added to.
    * @return the argument "theTargetToAddTo"
@@ -164,7 +177,6 @@ public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
   // -----------------------------------------
   // Filter cardinality
   // -----------------------------------------
-
 
   default ResultsHolder<T> exactly(int nbFirst) {
     throw new UnsupportedOperationException("Operation not supported on " + this);

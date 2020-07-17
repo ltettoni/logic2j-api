@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class represents a variable term.
+ * This class represents a variable {@link Term}.
  * Variables are identified by a name (which must starts with an upper case letter) or the anonymous
  * ('_') name.
  * Note: Instances MUST be immutable.
