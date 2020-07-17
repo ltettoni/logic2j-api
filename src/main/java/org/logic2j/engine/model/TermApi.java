@@ -423,14 +423,14 @@ public class TermApi {
 
     final TermVisitor<Void> findVarsVisitor = new TermVisitor<Void>() {
       @Override
-      public Void visit(Var<?> theVar) {
-        if (!theVar.isAnon()) {
+      public Void visit(Var<?> var) {
+        if (!var.isAnon()) {
           // Insert into array (even if may duplicate) - this will act as a sentinel
           final int highest = nbVars[0];
-          tempArray[highest] = theVar;
+          tempArray[highest] = var;
           // Search if we already have this var in the array - due to the sentinel we will always find it!
           int foundIndex = 0;
-          while (tempArray[foundIndex] != theVar) {
+          while (tempArray[foundIndex] != var) {
             foundIndex++;
           }
           // Did we hit the sentinel?
@@ -443,9 +443,9 @@ public class TermApi {
       }
 
       @Override
-      public Void visit(Struct<?> theStruct) {
+      public Void visit(Struct<?> struct) {
         // Recurse through children
-        final Object[] args = theStruct.getArgs();
+        final Object[] args = struct.getArgs();
         for (final Object arg : args) {
           if (arg instanceof Term) {
             ((Term) arg).accept(this);

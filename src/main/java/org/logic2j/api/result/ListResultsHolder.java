@@ -5,11 +5,10 @@ import java.util.List;
 
 public class ListResultsHolder<T> implements ResultsHolder<T> {
 
-
   private final List<T> internal;
 
-  public ListResultsHolder(List<T> internal) {
-    this.internal = internal;
+  public ListResultsHolder(List<T> elements) {
+    this.internal = elements;
   }
 
   @SafeVarargs

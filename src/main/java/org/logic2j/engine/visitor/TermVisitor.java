@@ -24,14 +24,13 @@ import org.logic2j.engine.model.Var;
 
 /**
  * Generic Visitor for the two subclasses of the {@link Term}
- * hierarchy: {@link Var} and
- * {@link Struct}.
+ * hierarchy: {@link Var} and {@link Struct}.
  * For reference, see the Visitor design pattern.
  */
 public interface TermVisitor<T> {
 
-  T visit(Var<?> theVar);
+  T visit(Var<?> var);
 
-  T visit(Struct<?> theStruct);
+  T visit(Struct<?> struct);
 
 }

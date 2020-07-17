@@ -31,17 +31,17 @@ public interface ExtendedTermVisitor<T> extends TermVisitor<T> {
    * Extra visiting method for String, because often String need special handling,
    * for example in a visitor to marshall a Term, quoting needs to be done.
    *
-   * @param theAtomString
+   * @param aString
    * @return
    */
-  T visit(String theAtomString);
+  T visit(String aString);
 
   /**
    * The "fallback" method on Object will be invoked if no other more specific visit() method
    * could be found.
    *
-   * @param theObject
+   * @param anyObject
    * @return
    */
-  T visit(Object theObject);
+  T visit(Object anyObject);
 }
