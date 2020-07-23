@@ -334,8 +334,10 @@ public class TermApi {
   }
 
   /**
-   * Normalize a term, NOT taking into account existing operators and primitives.
-   * In principle this method should not be used. Side-effect (execution) of primitives is not guaranteed to occur.
+   * Normalize a term: factorize common sub-terms (see {@link #factorize(Object)}
+   * and assigning var indexes.
+   * This method should be overloaded in a real Prolog execution environment where
+   * primitives and operators need to be dealt with.
    *
    * @param term To be normalized
    * @return A normalized COPY of term ready to be used for inference (in a Theory ore as a goal)
