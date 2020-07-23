@@ -117,4 +117,14 @@ public class VarTest {
     assertThat(anyVar("X").isAnon()).isFalse();
   }
 
+  @Test
+  public void isUnderscoredFalse() {
+    assertThat(anyVar("X").isUnderscoredVar()).isFalse();
+  }
+
+  @Test
+  public void isUnderscoredTrue() {
+    assertThat(anyVar("_x").isUnderscoredVar()).isTrue();
+  }
+
 }

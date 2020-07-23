@@ -38,6 +38,9 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
   private static final long serialVersionUID = 1L;
 
   public static final String WHOLE_SOLUTION_VAR_NAME = "."; // No need to "intern()" a compile-time constant
+
+  private static final String UNDERSCORE_VAR_PREFIX = "_";
+
   /**
    * Name of the anonymous variable is always "_". This constant is internalized, you
    * can safely compare it with ==.
@@ -196,6 +199,18 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
 
 
   // ---------------------------------------------------------------------------
+  // Other features
+  // ---------------------------------------------------------------------------
+
+  /**
+   * @return True if this variable's name start with the "_" undesrcore char but is not the anonymous var
+   */
+  public boolean isUnderscoredVar() {
+    return this.name.startsWith(UNDERSCORE_VAR_PREFIX) && !isAnon();
+  }
+
+
+  // ---------------------------------------------------------------------------
   // Accessors
   // ---------------------------------------------------------------------------
 
@@ -214,7 +229,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
   }
 
   /**
-   * Tests if this variable is anonymous.
+   * @return True iff this variable is the anonymous variable.
    */
   public boolean isAnon() {
     //noinspection StringEquality - we internalized strings so it is licit to copmare references
