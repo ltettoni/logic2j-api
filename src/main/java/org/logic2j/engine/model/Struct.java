@@ -26,8 +26,9 @@ import org.logic2j.engine.exception.InvalidTermException;
 import org.logic2j.engine.visitor.TermVisitor;
 
 /**
- * A {@link Struct} represents either a Prolog compound {@link Term}s such as functor(arg1, arg2),
- * or a Prolog atom (a 0-arity compound).
+ * A {@link Struct} corresponds to a Prolog compound {@link Term} such as functor(arg1, ..., argN)
+ * of arity N, or a Prolog atom (a 0-arity compound).
+ * In addition a payload of generic type T can be associated to the Struct.
  * Note: Instances MUST be immutable.
  */
 public class Struct<T> extends Term implements Cloneable {
@@ -94,7 +95,8 @@ public class Struct<T> extends Term implements Cloneable {
   private transient Object[] args;
 
   /**
-   * The signature is internalized and allows for fast matching during unification
+   * The signature is internalized and allows for fast matching during unification.
+   * We use the same format as in Prolog: name/arity
    */
   private String signature;
 
