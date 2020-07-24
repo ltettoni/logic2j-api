@@ -18,6 +18,8 @@
 package org.logic2j.engine.model;
 
 
+import static org.logic2j.engine.model.Var.anon;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,19 +33,55 @@ import java.util.stream.StreamSupport;
 
 /**
  * Static factories for {@link Constant}, used to provide data to predicates: one or several values of a given type.
- * Can provide values from {@link Iterator}s or {@link Stream}s.
+ * Can provide values from arrays, {@link Iterator}s or {@link Stream}s.
  * Only one method: {@link #empty(Class)} allows empty content. Other methods require at least one element to determine the data type.
  * TODO: factories for collections should maybe ensure the data type by scanning all elements, not only checking on the first?
  */
 public class SimpleBindings {
 
-  /**
-   * Forbid instantiation
-   */
   private SimpleBindings() {
+    // Forbid instantiation
   }
 
   /**
+   * Factory to create a new Binding from anything.
+   * @param any Any Object, null allowed meaning the anonymous variable.
+   * @return A Binding, never null
+   */
+  public static Binding<?> newBinding(Object any) {
+    if (any == null) {
+      return anon();
+    }
+    // Here we will convert basic types to their SimpleBindings
+    if (any instanceof Long) {
+      return bind((Long) any);
+    }
+    if (any instanceof Integer) {
+      return bind((Integer) any);
+    }
+    if (any instanceof String) {
+      return bind((String) any);
+    }
+    if (any instanceof Double) {
+      return bind((Double) any);
+    }
+    if (any instanceof Float) {
+      return bind((Float) any);
+    }
+    if (any instanceof Boolean) {
+      return bind((Boolean) any);
+    }
+    if (any instanceof Binding<?>) {
+      // Already a Binding
+      return (Binding<?>) any;
+    }
+    throw new IllegalArgumentException("Object " + any + " of " + any.getClass() + " cannot be converted to a Binding");
+  }
+
+
+  /**
+   * Empty binding (no data)
+   *
    * @param type
    * @param <T>
    * @return A {@link Constant} representing no data.
@@ -133,6 +171,8 @@ public class SimpleBindings {
   }
 
   /**
+   * Provide values as an array or varargs
+   *
    * @param values
    * @param <T>
    * @return A {@link Constant} that supplies several values.
@@ -193,7 +233,7 @@ public class SimpleBindings {
   }
 
   /**
-   * Bind a Java collection.
+   * Bind values from any Collection.
    *
    * @param coll
    * @param <T>
@@ -312,7 +352,7 @@ public class SimpleBindings {
   }
 
   /**
-   * Consume the iterator immediately and only once, cache all data in this object.
+   * Consume the Iterator immediately and only once, cache all data in this object.
    *
    * @param iterator
    * @param <T>
@@ -385,6 +425,11 @@ public class SimpleBindings {
     return bind(iterable.iterator());
   }
 
+  /**
+   * Helper class for the anonymous classes uses internally here.
+   *
+   * @param <T>
+   */
   private abstract static class ConstantBase<T> implements Constant<T> {
 
     protected static <T> T[] genericArray(Class<T> elementType, int length) {
