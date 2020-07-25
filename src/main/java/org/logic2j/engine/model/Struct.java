@@ -172,7 +172,7 @@ public class Struct<T> extends Term implements Cloneable {
   }
 
   /**
-   * Factory to builds a compound, with non-{@link Term} arguments that will be converted
+   * Factory to build a compound, with non-{@link Term} arguments that will be instantiated
    * by {@link TermApi#valueOf(Object)}.
    *
    * Note: This method is a static factory, not a constructor, to emphasize that arguments
