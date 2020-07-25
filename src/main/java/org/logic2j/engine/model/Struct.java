@@ -235,8 +235,7 @@ public class Struct<T> extends Term implements Cloneable {
     // Now initialize result - a new Struct only if any change was found below
     final Struct<?> factorized;
     if (anyChange) {
-      factorized = new Struct<>(this);
-      factorized.args = newArgs;
+      factorized = this.cloneWithNewArguments(newArgs);
     } else {
       factorized = this;
     }
