@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import org.logic2j.engine.exception.InvalidTermException;
 import org.logic2j.engine.visitor.ExtendedTermVisitor;
@@ -244,6 +245,48 @@ public class TermApi {
       return indexOfNextNonIndexedVar;
     }
   }
+
+
+  /**
+   * Depth-first traversal with potential remapping of any {@link Struct} instance.
+   *
+   * @param term         Term to traverse
+   * @param structMapper Transformation function
+   * @return When nothing changed, must return the argument term (same reference), otherwise
+   * return transformed object
+   */
+  public Object depthFirstStructTransform(Object term, Function<Struct<?>, Struct<?>> structMapper) {
+    if (!(term instanceof Struct<?>)) {
+      return term;
+    }
+    final Struct struct = (Struct<?>) term;
+    final Object[] args = struct.getArgs();
+    if (args.length > 0) {
+      // Transform args, depth first
+      final Object[] newArgs = new Object[args.length];
+      boolean argsChanged = false;
+      for (int i = 0; i < args.length; i++) {
+        final Object argi = struct.getArg(i);
+        if (argi instanceof Struct<?>) {
+          final Struct<?> remapped = structMapper.apply((Struct<?>) argi);
+          if (remapped != argi) {
+            argsChanged = true;
+          }
+          newArgs[i] = remapped;
+        } else {
+          newArgs[i] = argi;
+        }
+      }
+      if (argsChanged) {
+        return structMapper.apply(struct.cloneWithNewArguments(newArgs));
+      } else {
+        return structMapper.apply(struct);
+      }
+    } else {
+      return structMapper.apply(struct);
+    }
+  }
+
 
   /**
    * A unique identifier that determines the family of the predicate represented by this {@link Struct}.
