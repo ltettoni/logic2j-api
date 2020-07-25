@@ -431,7 +431,7 @@ public class TermApi {
         // Dubious for real programming, but some data sources may contain empty fields, and this is the only way to represent
         // them
         // as a Term
-        result = new Struct<>("");
+        result = Struct.atom("");
       } else if (Character.isUpperCase(chars.charAt(0)) || chars.startsWith(Var.ANONYMOUS_VAR_NAME)) {
         // Use Prolog's convention re variables starting with uppercase or underscore
         result = strVar(chars);
