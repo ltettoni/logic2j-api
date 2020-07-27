@@ -268,7 +268,7 @@ public class TermApi {
       for (int i = 0; i < args.length; i++) {
         final Object argi = struct.getArg(i);
         if (argi instanceof Struct<?>) {
-          final Struct<?> remapped = structMapper.apply((Struct<?>) argi);
+          final Object remapped = depthFirstStructTransform(argi, structMapper);
           if (remapped != argi) {
             argsChanged = true;
           }
