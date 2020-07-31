@@ -251,7 +251,8 @@ public class TermApi {
    * Depth-first traversal with potential remapping of any {@link Struct} instance.
    *
    * @param term         Term to traverse
-   * @param structMapper Transformation function
+   * @param structMapper Transformation function, applies only to Struct, for which the
+   *                     arguments are recursively pre-processed first.
    * @return When nothing changed, must return the argument term (same reference), otherwise
    * return transformed object
    */
@@ -264,25 +265,26 @@ public class TermApi {
     if (args.length > 0) {
       // Transform args, depth first
       final Object[] newArgs = new Object[args.length];
-      boolean argsChanged = false;
+      boolean anyChange = false;
       for (int i = 0; i < args.length; i++) {
         final Object argi = struct.getArg(i);
         if (argi instanceof Struct<?>) {
           final Object remapped = depthFirstStructTransform(argi, structMapper);
-          if (remapped != argi) {
-            argsChanged = true;
-          }
+          anyChange |= (argi != remapped);
           newArgs[i] = remapped;
         } else {
           newArgs[i] = argi;
         }
       }
-      if (argsChanged) {
+      if (anyChange) {
+        // Args changed
         return structMapper.apply(struct.cloneWithNewArguments(newArgs));
       } else {
+        // Args unchanged, just map the structure
         return structMapper.apply(struct);
       }
     } else {
+      // Arity 0
       return structMapper.apply(struct);
     }
   }
