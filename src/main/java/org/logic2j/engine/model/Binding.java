@@ -18,16 +18,22 @@
 package org.logic2j.engine.model;
 
 /**
- * A Binding allows to pass {@link Var}s or {@link Constant}s as arguments of a {@link Struct}.
- * The arguments of a {@link Struct} may be any java Object; however if you
- * need strong typing you should rather pass {@link Binding}s.
+ * Use {@link Binding}s to pass {@link Var}s or {@link Constant}s as arguments to a {@link Struct} predicate.
  *
- * For a factory see {@link SimpleBindings#newBinding(Object)}
+ * The reason for this interface is to support:
+ * - Strong typing: Although the arguments to a {@link Struct} may be any Java Object, you may prefer strongly-typed predicates which you
+ * derive from Struct. For that use {@link Binding} with a generic type.
+ * - Single or multiple values
+ * - Allow to pass input (constants) our output (free {@link Var}s) to predicates.
+ * - Be a "pivot" object for many ways to specify values (collectons, arrays, suppliers, etc). This reduces the need for too
+ * many predicate constructors.
+ *
+ * You can find implementations, and a static factory in {@link SimpleBindings#newBinding(Object)}
  */
 public interface Binding<T> {
 
   /**
-   * @return The type of the bound values.
+   * @return The effective type of the bound values.
    */
   Class<T> getType();
 
