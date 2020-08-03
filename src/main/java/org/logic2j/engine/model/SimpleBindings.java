@@ -319,7 +319,7 @@ public class SimpleBindings {
       @Override
       public T toScalar() {
         consumeNow();
-        return Arrays.stream(this.data).findFirst().orElseThrow(() -> new IllegalArgumentException("Empty stream cannot provide a scalar form it"));
+        return Arrays.stream(this.data).findFirst().orElseThrow(() -> new IllegalStateException("Empty stream cannot provide a scalar form it"));
       }
 
       @Override
@@ -382,7 +382,7 @@ public class SimpleBindings {
       @Override
       public T toScalar() {
         consumeNow();
-        return Arrays.stream(this.data).findFirst().orElseThrow(() -> new IllegalArgumentException("Empty stream cannot provide a scalar form it"));
+        return Arrays.stream(this.data).findFirst().orElseThrow(() -> new IllegalStateException("Empty stream cannot provide a scalar form it"));
       }
 
       @Override

@@ -57,8 +57,9 @@ public interface Constant<T> extends Binding<T> {
 
   /**
    * Convert to single value; in case of a stream this will consumes it.
+   * In case more than one values exists a IllegalStateException must be thrown
    *
-   * @return
+   * @return The single value or null if absent.
    */
   T toScalar();
 
