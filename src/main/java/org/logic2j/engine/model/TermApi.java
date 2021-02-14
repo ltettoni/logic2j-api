@@ -18,6 +18,7 @@
 package org.logic2j.engine.model;
 
 
+import static org.logic2j.engine.model.Struct.QUOTE;
 import static org.logic2j.engine.model.Var.strVar;
 
 import java.util.ArrayList;
@@ -340,14 +341,26 @@ public class TermApi {
             /* Much slower */ !ATOM_PATTERN.matcher(textAsString).matches();
     if (needQuote) {
       final StringBuilder sb = new StringBuilder(text.length() + 2);
-      sb.append(Struct.QUOTE); // Opening quote
+      sb.append(QUOTE); // Opening quote
       for (final char c : textAsString.toCharArray()) {
-        sb.append(c);
-        if (c == Struct.QUOTE) {
-          sb.append(c); // Quotes are doubled
+        switch (c) {
+          case '\n':
+            sb.append("\\n");
+            break;
+          case '\r':
+            sb.append("\\r");
+            break;
+          case QUOTE: // Quotes are doubled
+          case '\\': // Backslash are doubled
+            sb.append(c);
+            sb.append(c);
+            break;
+          default: // Other chars are just output
+            sb.append(c);
+            break;
         }
       }
-      sb.append(Struct.QUOTE); // Closing quote
+      sb.append(QUOTE); // Closing quote
       return sb;
     }
     return text;

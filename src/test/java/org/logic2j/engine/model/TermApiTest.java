@@ -30,13 +30,14 @@ import org.logic2j.engine.exception.InvalidTermException;
  */
 public class TermApiTest {
   private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(TermApiTest.class);
+  private static final TermApi TERM_API = termApi();
 
   @Test
   public void structurallyEquals() {
     // Vars are never structurally equal ...
     assertThat(anyVar("X").structurallyEquals(anyVar("Y"))).isFalse();
-    final Var<?>x1 = anyVar("X");
-    final Var<?>x2 = anyVar("X");
+    final Var<?> x1 = anyVar("X");
+    final Var<?> x2 = anyVar("X");
     // ... even when they have the same name
     assertThat(x1.structurallyEquals(x2)).isFalse();
     final Struct<?> s = new Struct<>("s", x1, x2);
@@ -109,15 +110,47 @@ public class TermApiTest {
     assertThat(termApi().arityFromSignature("toto/4")).isEqualTo(4);
   }
 
+  // --------------------------------------------------------------------------
+  // Test quoting (escaping of special characters)
+  // --------------------------------------------------------------------------
+
   @Test
   public void quoteIfNeeded() {
-    assertThat(termApi().quoteIfNeeded(null)).isNull();
-    assertThat(termApi().quoteIfNeeded("").toString()).isEqualTo("''");
-    assertThat(termApi().quoteIfNeeded(" ").toString()).isEqualTo("' '");
-    assertThat(termApi().quoteIfNeeded("ab").toString()).isEqualTo("ab");
-    assertThat(termApi().quoteIfNeeded("Ab").toString()).isEqualTo("'Ab'");
-    assertThat(termApi().quoteIfNeeded("it's").toString()).isEqualTo("'it''s'");
-    assertThat(termApi().quoteIfNeeded("a''b").toString()).isEqualTo("'a''''b'");
-    assertThat(termApi().quoteIfNeeded("'that'").toString()).isEqualTo("'''that'''");
+    assertThat(TERM_API.quoteIfNeeded(null)).isNull();
+    assertThat(TERM_API.quoteIfNeeded("").toString()).isEqualTo("''");
+    assertThat(TERM_API.quoteIfNeeded(" ").toString()).isEqualTo("' '");
+    assertThat(TERM_API.quoteIfNeeded("ab").toString()).isEqualTo("ab");
+    assertThat(TERM_API.quoteIfNeeded("Ab").toString()).isEqualTo("'Ab'");
+    assertThat(TERM_API.quoteIfNeeded("it's").toString()).isEqualTo("'it''s'");
+    assertThat(TERM_API.quoteIfNeeded("a''b").toString()).isEqualTo("'a''''b'");
+    assertThat(TERM_API.quoteIfNeeded("'that'").toString()).isEqualTo("'''that'''");
+  }
+
+
+  @Test
+  public void spaces() {
+    assertThat(TERM_API.quoteIfNeeded(" txt  ").toString()).isEqualTo("' txt  '");
+  }
+
+  @Test
+  public void tabs() {
+    assertThat(TERM_API.quoteIfNeeded("a\tb").toString()).isEqualTo("'a\tb'");
+  }
+
+  @Test
+  public void nl() {
+    assertThat(TERM_API.quoteIfNeeded("a\nb").toString()).isEqualTo("'a\\nb'");
+  }
+
+
+  @Test
+  public void cr() {
+    assertThat(TERM_API.quoteIfNeeded("a\rb").toString()).isEqualTo("'a\\rb'");
+  }
+
+
+  @Test
+  public void complicated() {
+    assertThat(TERM_API.quoteIfNeeded("\t\n\na\rb\t ").toString()).isEqualTo("'\t\\n\\na\\rb\t '");
   }
 }
