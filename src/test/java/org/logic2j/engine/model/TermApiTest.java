@@ -150,6 +150,12 @@ public class TermApiTest {
 
 
   @Test
+  public void backslash() {
+    assertThat(TERM_API.quoteIfNeeded("a\\b\\\\c").toString()).isEqualTo("'a\\\\b\\\\\\\\c'");
+  }
+
+
+  @Test
   public void complicated() {
     assertThat(TERM_API.quoteIfNeeded("\t\n\na\rb\t ").toString()).isEqualTo("'\t\\n\\na\\rb\t '");
   }
