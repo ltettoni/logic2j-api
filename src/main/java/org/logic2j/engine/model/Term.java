@@ -19,6 +19,7 @@ package org.logic2j.engine.model;
 
 import static org.logic2j.engine.model.TermApiLocator.termApi;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import org.logic2j.engine.visitor.TermVisitor;
@@ -37,6 +38,7 @@ import org.logic2j.engine.visitor.TermVisitor;
  * TODO Why Serializable?
  */
 public abstract class Term implements Serializable {
+  @Serial
   private static final long serialVersionUID = 1L;
 
   /**
@@ -84,7 +86,7 @@ public abstract class Term implements Serializable {
 
   // ---------------------------------------------------------------------------
   // Graph traversal methods, template methods with "protected" scope, user code should use TermApi methods instead.
-  // Some traversal are implemented by the Visitor design pattern and the #accept() method
+  // Some traversal is implemented by the Visitor design pattern and the #accept() method
   // ---------------------------------------------------------------------------
 
   /**

@@ -16,10 +16,13 @@
  */
 package org.logic2j.engine.exception;
 
+import java.io.Serial;
+
 /**
  * Root class for all logic2j {@link RuntimeException}.
  */
 public abstract class Logic2jException extends RuntimeException {
+  @Serial
   private static final long serialVersionUID = 1L;
 
   public Logic2jException(CharSequence message) {

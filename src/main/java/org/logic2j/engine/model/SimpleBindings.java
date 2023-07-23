@@ -87,7 +87,7 @@ public class SimpleBindings {
    * @return A {@link Constant} representing no data.
    */
   public static <T> Constant<T> empty(Class<T> type) {
-    return new ConstantBase<T>() {
+    return new ConstantBase<>() {
 
       @Override
       public boolean isUniqueFeed() {
@@ -133,7 +133,7 @@ public class SimpleBindings {
    * @note If you need to optionally have null values specify an {@link java.util.Optional}
    */
   public static <T> Constant<T> bind(Supplier<T> supplier) {
-    return new ConstantBase<T>() {
+    return new ConstantBase<>() {
       @Override
       public boolean isUniqueFeed() {
         return false;
@@ -179,7 +179,7 @@ public class SimpleBindings {
    */
   @SafeVarargs
   public static <T> Constant<T> bind(T... values) {
-    return new ConstantBase<T>() {
+    return new ConstantBase<>() {
       @Override
       public boolean isUniqueFeed() {
         return false;
@@ -240,7 +240,7 @@ public class SimpleBindings {
    * @return A {@link Constant} that supplies several values.
    */
   public static <T> Constant<T> bind(Collection<T> coll) {
-    return new ConstantBase<T>() {
+    return new ConstantBase<>() {
       @Override
       public boolean isUniqueFeed() {
         return false;
@@ -296,7 +296,7 @@ public class SimpleBindings {
    * @return
    */
   public static <T> Constant<T> bind(Stream<T> stream) {
-    return new ConstantBase<T>() {
+    return new ConstantBase<>() {
       private T[] data = null;
 
       @Override
@@ -359,7 +359,7 @@ public class SimpleBindings {
    * @return
    */
   public static <T> Constant<T> bind(Iterator<T> iterator) {
-    return new ConstantBase<T>() {
+    return new ConstantBase<>() {
       private T[] data = null;
 
       @Override
@@ -410,7 +410,7 @@ public class SimpleBindings {
             throw new IllegalArgumentException("Empty Constant iterator, cannot determine data type of instances.");
           }
           final Class<T> elementType = (Class<T>) coll.get(0).getClass();
-          this.data = coll.stream().toArray(n -> (T[]) Array.newInstance(elementType, n));
+          this.data = coll.toArray(n -> (T[]) Array.newInstance(elementType, n));
         }
       }
 

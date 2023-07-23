@@ -32,10 +32,10 @@ import org.logic2j.engine.visitor.ExtendedTermVisitor;
 import org.logic2j.engine.visitor.TermVisitor;
 
 /**
- * Facade API to the {@link Term} hierarchy, to ease their handling. This class resides in the same package than the {@link Term}
+ * Facade API to the {@link Term} hierarchy, to ease their handling. This class resides in the same package as the {@link Term}
  * subclasses, so they can invoke its package-scoped methods. See important notes re. Term factorization ({@link #factorize(Object)}) and
  * normalization ({@link #normalize(Object)} .
- *
+ * <p>
  * Note: This class knows about the subclasses of {@link Term}, it breaks the OO design pattern a little but avoid defining many methods
  * there. I find it acceptable since subclasses of {@link Term} don't sprout every day and are not for end-user extension.
  * Note: Avoid static methods, prefer instantiating this class where needed.
@@ -54,7 +54,7 @@ public class TermApi {
       throw new InvalidTermException(message);
     }
     final Struct<?> s = (Struct<?>) term;
-    //noinspection StringEquality - we internalized strings so it is licit to copmare references
+    //noinspection StringEquality - we internalized strings, so it is licit to copmare references
     if (functor != null && s.getName() != functor) {
       throw new InvalidTermException("Got a Struct of wrong functor \"" + s.getName() + "\" instead of " + functorSpec + " and " + aritySpec);
     }
@@ -123,7 +123,7 @@ public class TermApi {
   }
 
   /**
-   * Recursively collect all terms and add them to the collectedTerms collection, and also initialize their Term.index to
+   * Recursively collect all terms and add them to the collectedTerms collection, and also initialize their Term#index to
    * {@link Term#NO_INDEX}. This is an internal template method: the public API entry point is {@link TermApi#collectTerms(Object)}; see a
    * more
    * detailed description there.
@@ -142,7 +142,7 @@ public class TermApi {
   }
 
   /**
-   * Recursively collect all terms at and under term, and also reinit their Term.index to {@link Term#NO_INDEX}. For
+   * Recursively collect all terms at and under term, and also reinit their Term#index to {@link Term#NO_INDEX}. For
    * example for a
    * structure "s(a,b(c),d(b(a)),X,X,Y)", the result Collection will hold [a, c, b(c), b(a), c(b(a)), X, X, Y]
    *
@@ -152,7 +152,7 @@ public class TermApi {
   public Collection<Object> collectTerms(Object term) {
     final ArrayList<Object> recipient = new ArrayList<>();
     collectTermsInto(term, recipient);
-    // Remove ourself from the result - we are always at the end of the collection
+    // Remove ourselves from the result - we are always at the end of the collection
     recipient.remove(recipient.size() - 1);
     return recipient;
   }
@@ -170,7 +170,7 @@ public class TermApi {
   }
 
   /**
-   * Factorizing will either return a new {@link Term} or this {@link Term} depending if it already exists in the supplied Collection.
+   * Factorizing will either return a new {@link Term} or this {@link Term} if it already exists in the supplied Collection.
    * This will factorize duplicated atoms, numbers, variables, or even structures that are statically equal. A factorized {@link Struct}
    * will have all occurrences of the same {@link Var}iable sharing the same object reference. This is an internal template method: the
    * public API entry point is {@link TermApi#factorize(Object)}; see a more detailed description there.
@@ -213,13 +213,13 @@ public class TermApi {
    * @return A {@link Var} with the specified name, or null when not found.
    */
   public Var<?>findVar(Object term, String varName) {
-    //noinspection StringEquality - we internalized strings so it is licit to copmare references
+    //noinspection StringEquality - we internalized strings, so it is licit to copmare references
     if (varName == Var.WHOLE_SOLUTION_VAR_NAME) {
       return Var.WHOLE_SOLUTION_VAR;
     }
     if (term instanceof Struct) {
       return ((Struct<?>) term).findVar(varName);
-    } else //noinspection StringEquality - we internalized strings so it is licit to copmare references
+    } else //noinspection StringEquality - we internalized strings, so it is licit to copmare references
       if (term instanceof Var<?> && ((Var<?>) term).getName() == varName) {
       return (Var<?>) term;
     } else {
@@ -229,7 +229,7 @@ public class TermApi {
   }
 
   /**
-   * Assign the Term.index value for {@link Var} and {@link Struct}s.
+   * Assign the Term#index value for {@link Var} and {@link Struct}s.
    * Will recurse through Struct.
    *
    * @param indexOfNextNonIndexedVar
@@ -261,7 +261,7 @@ public class TermApi {
     if (!(term instanceof Struct<?>)) {
       return term;
     }
-    final Struct struct = (Struct<?>) term;
+    final Struct<?> struct = (Struct<?>) term;
     final Object[] args = struct.getArgs();
     if (args.length > 0) {
       // Transform args, depth first
@@ -323,7 +323,7 @@ public class TermApi {
    * Quote atoms if needed.
    *
    * @param text
-   * @return theText, quoted if necessary (typically "X" will become "'X'" whereas "x" will remain unchanged.
+   * @return theText, quoted if necessary (typically "X" will become "'X'" whereas "x" will remain unchanged).
    * Null will return null. The empty string will become "''". If not quoted, the same reference (theText) is returned.
    */
   public CharSequence quoteIfNeeded(CharSequence text) {
@@ -392,7 +392,7 @@ public class TermApi {
   }
 
   /**
-   * Normalize a term: factorize common sub-terms (see {@link #factorize(Object)}
+   * Normalize a term: factorize common sub-terms (see {@link #factorize(Object)})
    * and assigning var indexes.
    * This method should be overloaded in a real Prolog execution environment where
    * primitives and operators need to be dealt with.
@@ -437,7 +437,7 @@ public class TermApi {
     } else if (anyObject instanceof Boolean) {
       result = (Boolean) anyObject ? Struct.ATOM_TRUE : Struct.ATOM_FALSE;
     } else if (anyObject instanceof CharSequence || anyObject instanceof Character) {
-      // Very very vary rudimentary parsing
+      // Very rudimentary parsing
       final String chars = anyObject.toString();
 
       if (Var.ANONYMOUS_VAR_NAME.equals(chars)) {
@@ -484,7 +484,7 @@ public class TermApi {
     final Var<?>[] tempArray = new Var[100]; // Enough for the moment - we could plan an auto-allocating array if needed, I doubt it
     final int[] nbVars = new int[]{0};
 
-    final TermVisitor<Void> findVarsVisitor = new TermVisitor<Void>() {
+    final TermVisitor<Void> findVarsVisitor = new TermVisitor<>() {
       @Override
       public Void visit(Var<?> var) {
         if (!var.isAnon()) {

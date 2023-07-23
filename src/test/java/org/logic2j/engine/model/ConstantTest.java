@@ -61,7 +61,7 @@ public class ConstantTest {
 
   @Test
   public void setIterator1() {
-    final Constant<Long> binding = bind(LongStream.range(1, 1000).boxed().collect(Collectors.toList()).iterator());
+    final Constant<Long> binding = bind(LongStream.range(1, 1000).boxed().toList().iterator());
     assertThat(binding.isUniqueFeed()).isTrue();
     assertThat(binding.size()).isEqualTo(999L);
   }

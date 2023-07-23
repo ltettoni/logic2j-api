@@ -19,6 +19,7 @@ package org.logic2j.engine.model;
 
 import static org.logic2j.engine.model.TermApiLocator.termApi;
 
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -28,10 +29,11 @@ import org.logic2j.engine.visitor.TermVisitor;
 /**
  * A {@link Struct} corresponds to a Prolog compound {@link Term} such as functor(arg1, ..., argN)
  * of arity N, or a Prolog atom (a 0-arity compound).
- * In addition a payload of generic type T can be associated to the Struct.
+ * In addition, a payload of generic type T can be associated to the Struct.
  * Note: Instances MUST be immutable.
  */
 public class Struct<T> extends Term implements Cloneable {
+  @Serial
   private static final long serialVersionUID = 1L;
 
   // ---------------------------------------------------------------------------
@@ -153,7 +155,7 @@ public class Struct<T> extends Term implements Cloneable {
   }
 
   /**
-   * Obtain an atom from the catalog if it pre-existed, or create one an register in the catalog.
+   * Obtain an atom from the catalog if it pre-existed, or create one a register in the catalog.
    *
    * @param functor
    * @return Either a new one created or an existing one. It's actually either a String (if it can be),
@@ -162,7 +164,7 @@ public class Struct<T> extends Term implements Cloneable {
   public static Object atom(String functor) {
     // Search in the catalog of atoms for exact match
     final String iFunctor = functor.intern();
-    //noinspection StringEquality - we internalized strings so it is licit to copmare references
+    //noinspection StringEquality - we internalized strings, so it is licit to copmare references
     final boolean specialAtomRequiresStruct = iFunctor == Struct.FUNCTOR_CUT || iFunctor == Struct.FUNCTOR_TRUE || iFunctor == Struct.FUNCTOR_FALSE;
     if (!specialAtomRequiresStruct) {
       // We can return an internalized String
@@ -174,7 +176,7 @@ public class Struct<T> extends Term implements Cloneable {
   /**
    * Factory to build a compound, with non-{@link Term} arguments that will be instantiated
    * by {@link TermApi#valueOf(Object)}.
-   *
+   * <p>
    * Note: This method is a static factory, not a constructor, to emphasize that arguments
    * are not of the type needed by this class, but need transformation.
    */
@@ -210,7 +212,7 @@ public class Struct<T> extends Term implements Cloneable {
   // ---------------------------------------------------------------------------
 
   /**
-   * Set Term.index to {@link Term#NO_INDEX}, recursively collect all argument's terms first,
+   * Set Term#index to {@link Term#NO_INDEX}, recursively collect all argument's terms first,
    * then finally add this {@link Struct} to collectedTerms.
    * The functor alone (without its children) is NOT collected as a term. An atom is collected as itself.
    *
@@ -380,11 +382,11 @@ public class Struct<T> extends Term implements Cloneable {
   // ---------------------------------------------------------------------------
 
   /**
-   * For {@link Struct}s, the Term.index will be the maximal index of any variables that can be found, recursively, under all
+   * For {@link Struct}s, the Term#index will be the maximal index of any variables that can be found, recursively, under all
    * children arguments.
-   *
+   * <p>
    * Note: Assigning indexes, for example with a base index of 0, will proceed sequentially by depth-first
-   * traversal. The first Vars encountered in sequence will receive indexes 0, 1, 2. Therefore a term such as
+   * traversal. The first Vars encountered in sequence will receive indexes 0, 1, 2. Therefore, a term such as
    * goal(A, Z, Y) will guarantee that indexes are: A=0, Z=1, Y=2.
    */
   int assignIndexes(int indexOfNextNonIndexedVar) {

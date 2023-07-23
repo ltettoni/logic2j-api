@@ -34,14 +34,14 @@ public interface Constant<T> extends Binding<T> {
   boolean isUniqueFeed();
 
   /**
-   * Calculate the size. In case of a stream this will consumes it.
+   * Calculate the size. In case of a stream this will consume it.
    *
    * @return Cardinality of data: 0=empty, 1=scalar, >1=vector, -1=unknown
    */
   long size();
 
   /**
-   * Check content; in case of a stream this will consumes it.
+   * Check content; in case of a stream this will consume it.
    *
    * @param value
    * @return
@@ -49,14 +49,14 @@ public interface Constant<T> extends Binding<T> {
   boolean contains(T value);
 
   /**
-   * Convert to array; in case of a stream this will consumes it.
+   * Convert to array; in case of a stream this will consume it.
    *
    * @return
    */
   T[] toArray();
 
   /**
-   * Convert to single value; in case of a stream this will consumes it.
+   * Convert to single value; in case of a stream this will consume it.
    * In case more than one values exists a IllegalStateException must be thrown
    *
    * @return The single value or null if absent.

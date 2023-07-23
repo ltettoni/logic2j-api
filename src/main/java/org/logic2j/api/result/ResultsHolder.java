@@ -24,7 +24,7 @@ import java.util.stream.StreamSupport;
 public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
 
   // -----------------------------------------
-  // Check existence and cardinality, default implementations rely on count()
+  // Check existence and cardinality, default implementations rely on count() which is far from optimal in certain cases.
   // -----------------------------------------
 
   /**
@@ -33,7 +33,7 @@ public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
    * @return true if at least one result is available
    */
   default boolean isPresent() {
-    return count() > 0;
+    return !isEmpty();
   }
 
   /**
@@ -42,7 +42,7 @@ public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
    * @return Opposite to {@link #isPresent()}
    */
   default boolean isEmpty() {
-    return !isPresent();
+    return count() == 0;
   }
 
   /**
@@ -66,7 +66,7 @@ public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
   /**
    * Check for multiple values.
    *
-   * @return true iff strictly more than one solutions.
+   * @return true iff strictly more than one solution.
    */
   default boolean isMultiple() {
     return count() > 1;
