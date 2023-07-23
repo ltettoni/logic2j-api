@@ -48,12 +48,11 @@ public class TermApi {
   private static Struct<?> requireStruct(Object term, String functor, int arity) {
     final String functorSpec = functor != null ? "functor \"" + functor + '"' : "any functor";
     final String aritySpec = arity >= 0 ? "arity=" + arity : "any arity";
-    if (!(term instanceof Struct)) {
+    if (!(term instanceof Struct<?> s)) {
       final String message =
               "A Struct of " + functorSpec + " and " + aritySpec + " was expected, got instead: " + term + " of class " + term.getClass().getName();
       throw new InvalidTermException(message);
     }
-    final Struct<?> s = (Struct<?>) term;
     //noinspection StringEquality - we internalized strings, so it is licit to copmare references
     if (functor != null && s.getName() != functor) {
       throw new InvalidTermException("Got a Struct of wrong functor \"" + s.getName() + "\" instead of " + functorSpec + " and " + aritySpec);
@@ -91,8 +90,7 @@ public class TermApi {
       // Now plain Strings are atoms!
       return true;
     }
-    if (term instanceof Struct) {
-      final Struct<?> s = (Struct<?>) term;
+    if (term instanceof Struct<?> s) {
       return s.getArity() == 0;
     }
     return false;
@@ -258,10 +256,9 @@ public class TermApi {
    * return transformed object
    */
   public Object depthFirstStructTransform(Object term, Function<Struct<?>, Struct<?>> structMapper) {
-    if (!(term instanceof Struct<?>)) {
+    if (!(term instanceof Struct<?> struct)) {
       return term;
     }
-    final Struct<?> struct = (Struct<?>) term;
     final Object[] args = struct.getArgs();
     if (args.length > 0) {
       // Transform args, depth first
@@ -344,20 +341,15 @@ public class TermApi {
       sb.append(QUOTE); // Opening quote
       for (final char c : textAsString.toCharArray()) {
         switch (c) {
-          case '\n':
-            sb.append("\\n");
-            break;
-          case '\r':
-            sb.append("\\r");
-            break;
-          case QUOTE: // Quotes are doubled
-          case '\\': // Backslash are doubled
+          case '\n' -> sb.append("\\n");
+          case '\r' -> sb.append("\\r");
+          // Quotes are doubled
+          case QUOTE, '\\' -> { // Backslash are doubled
             sb.append(c);
             sb.append(c);
-            break;
-          default: // Other chars are just output
-            sb.append(c);
-            break;
+          }
+          default -> // Other chars are just output
+                  sb.append(c);
         }
       }
       sb.append(QUOTE); // Closing quote
@@ -454,9 +446,8 @@ public class TermApi {
         // Otherwise it's an atom
         result = chars.intern();
       }
-    } else if (anyObject instanceof Number) {
+    } else if (anyObject instanceof Number nbr) {
       // Other types of numbers
-      final Number nbr = (Number) anyObject;
       if (nbr.doubleValue() % 1 != 0) {
         // Has floating point number
         result = nbr.doubleValue();

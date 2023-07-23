@@ -272,8 +272,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
     // Not found by structural equality, we match variables by their name
     // TODO I'm not actually sure why we do this - we should probably log and identify why this case
     for (final Object term : collectedTerms) {
-      if (term instanceof Var) {
-        final Var<?>var = (Var<?>) term;
+      if (term instanceof Var<?> var) {
         if (getName().equals(var.getName())) {
           return var;
         }
@@ -327,10 +326,9 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
     if (other == this) {
       return true;
     }
-    if (!(other instanceof Var)) {
+    if (!(other instanceof Var<?> that)) {
       return false;
     }
-    final Var<?>that = (Var<?>) other;
     //noinspection StringEquality - we internalized strings, so it is licit to copmare references
     return this.getName() == that.getName() && this.getIndex() == that.getIndex(); // Names are {@link String#intern()}alized so OK to check by reference
   }

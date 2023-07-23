@@ -269,10 +269,9 @@ public class Struct<T> extends Term implements Cloneable {
     if (theOther == this) {
       return true; // Same reference
     }
-    if (!(theOther instanceof Struct)) {
+    if (!(theOther instanceof Struct<?> that)) {
       return false;
     }
-    final Struct<?> that = (Struct<?>) theOther;
     // Arity and names must match.
     if (this.arity == that.arity && this.name == that.name) { // Names are {@link String#intern()}alized so OK to check by reference
       for (int i = 0; i < this.arity; i++) {
@@ -466,10 +465,9 @@ public class Struct<T> extends Term implements Cloneable {
    */
   @Override
   public boolean equals(Object other) {
-    if (!(other instanceof Struct)) {
+    if (!(other instanceof Struct<?> that)) {
       return false;
     }
-    final Struct<?> that = (Struct<?>) other;
     if (!(this.arity == that.arity && this.name == that.name)) { // Names are {@link String#intern()}alized so OK to check by reference
       return false;
     }
