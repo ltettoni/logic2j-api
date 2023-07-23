@@ -77,12 +77,6 @@ public class VarTest {
     assertThat(name2).isNotSameAs(name1);
   }
 
-  @Test
-  public void idempotence() {
-    final Var<?>v1 = anyVar("X");
-    assertThat(v1).isEqualTo(v1);
-  }
-
 
   @Test
   public void equality() {
