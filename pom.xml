@@ -52,7 +52,6 @@
     </dependency>
   </dependencies>
 
-
   <!-- Package sources and javadocs -->
   <build>
     <plugins>
@@ -90,5 +89,13 @@
       -->
     </plugins>
   </build>
+
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>ltettoni Maven Packages on GitHub</name>
+      <url>https://maven.pkg.github.com/ltettoni/logic2j-api</url>
+    </repository>
+  </distributionManagement>
 
 </project>
