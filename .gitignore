@@ -1,3 +1,7 @@
-/.idea/
+# maven
 /target
+# MacOS
+.DS_Store
+# IntelliJ
+/.idea/
 logic2j-api.iml
