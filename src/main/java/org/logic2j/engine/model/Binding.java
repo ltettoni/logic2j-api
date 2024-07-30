@@ -25,7 +25,7 @@ package org.logic2j.engine.model;
  * derive from Struct. For that use {@link Binding} with a generic type.
  * - Single or multiple values
  * - Allow to pass input (constants) our output (free {@link Var}s) to predicates.
- * - Be a "pivot" object for many ways to specify values (collectons, arrays, suppliers, etc). This reduces the need for too
+ * - Be a "pivot" object for many ways to specify values (collectons, arrays, suppliers, etc.). This reduces the need for too
  * many predicate constructors.
  * <p>
  * You can find implementations, and a static factory in {@link SimpleBindings#newBinding(Object)}

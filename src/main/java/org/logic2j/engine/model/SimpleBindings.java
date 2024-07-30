@@ -49,33 +49,19 @@ public class SimpleBindings {
    * @return A Binding, never null
    */
   public static Binding<?> newBinding(Object any) {
-    if (any == null) {
-      return anon();
-    }
-    // Here we will convert basic types to their SimpleBindings
-    if (any instanceof Long) {
-      return bind((Long) any);
-    }
-    if (any instanceof Integer) {
-      return bind((Integer) any);
-    }
-    if (any instanceof String) {
-      return bind((String) any);
-    }
-    if (any instanceof Double) {
-      return bind((Double) any);
-    }
-    if (any instanceof Float) {
-      return bind((Float) any);
-    }
-    if (any instanceof Boolean) {
-      return bind((Boolean) any);
-    }
-    if (any instanceof Binding<?>) {
-      // Already a Binding
-      return (Binding<?>) any;
-    }
-    throw new IllegalArgumentException("Object " + any + " of " + any.getClass() + " cannot be converted to a Binding");
+      return switch (any) {
+          case null -> anon();
+          // Here we will convert basic types to their SimpleBindings
+          case Long l -> bind(l);
+          case Integer i -> bind(i);
+          case String s -> bind(s);
+          case Double v -> bind(v);
+          case Float v -> bind(v);
+          case Boolean b -> bind(b);
+          case Binding<?> binding -> binding;  // Already a Binding
+          default ->
+                  throw new IllegalArgumentException("Object " + any + " of " + any.getClass() + " cannot be converted to a Binding");
+      };
   }
 
 
@@ -409,7 +395,7 @@ public class SimpleBindings {
           if (coll.isEmpty()) {
             throw new IllegalArgumentException("Empty Constant iterator, cannot determine data type of instances.");
           }
-          final Class<T> elementType = (Class<T>) coll.get(0).getClass();
+          final Class<T> elementType = (Class<T>) coll.getFirst().getClass();
           this.data = coll.toArray(n -> (T[]) Array.newInstance(elementType, n));
         }
       }

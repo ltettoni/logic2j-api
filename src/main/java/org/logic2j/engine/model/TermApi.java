@@ -151,7 +151,7 @@ public class TermApi {
     final ArrayList<Object> recipient = new ArrayList<>();
     collectTermsInto(term, recipient);
     // Remove ourselves from the result - we are always at the end of the collection
-    recipient.remove(recipient.size() - 1);
+    recipient.removeLast();
     return recipient;
   }
 
@@ -327,7 +327,7 @@ public class TermApi {
     if (text == null) {
       return null;
     }
-    if (text.length() == 0) {
+    if (text.isEmpty()) {
       // Probably that the empty string is not allowed in regular Prolog
       return "''";
     }
@@ -337,25 +337,29 @@ public class TermApi {
             /* For numbers */ textAsString.indexOf('.') >= 0 ||
             /* Much slower */ !ATOM_PATTERN.matcher(textAsString).matches();
     if (needQuote) {
-      final StringBuilder sb = new StringBuilder(text.length() + 2);
-      sb.append(QUOTE); // Opening quote
-      for (final char c : textAsString.toCharArray()) {
-        switch (c) {
-          case '\n' -> sb.append("\\n");
-          case '\r' -> sb.append("\\r");
-          // Quotes are doubled
-          case QUOTE, '\\' -> { // Backslash are doubled
-            sb.append(c);
-            sb.append(c);
-          }
-          default -> // Other chars are just output
-                  sb.append(c);
-        }
-      }
-      sb.append(QUOTE); // Closing quote
-      return sb;
+      return quotedText(textAsString);
     }
     return text;
+  }
+
+  private static StringBuilder quotedText(String textAsString) {
+    final StringBuilder sb = new StringBuilder(textAsString.length() + 2);
+    sb.append(QUOTE); // Opening quote
+    for (final char c : textAsString.toCharArray()) {
+      switch (c) {
+        case '\n' -> sb.append("\\n");
+        case '\r' -> sb.append("\\r");
+        // Quotes are doubled
+        case QUOTE, '\\' -> { // Backslash are doubled
+          sb.append(c);
+          sb.append(c);
+        }
+        default -> // Other chars are just output
+                sb.append(c);
+      }
+    }
+    sb.append(QUOTE); // Closing quote
+    return sb;
   }
 
   public <T> String formatStruct(Struct<T> struct) {
@@ -479,7 +483,7 @@ public class TermApi {
       @Override
       public Void visit(Var<?> var) {
         if (!var.isAnon()) {
-          // Insert into array (even if may duplicate) - this will act as a sentinel
+          // Insert into array (even if this may duplicate) - this will act as a sentinel
           final int highest = nbVars[0];
           tempArray[highest] = var;
           // Search if we already have this var in the array - due to the sentinel we will always find it!

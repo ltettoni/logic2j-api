@@ -86,10 +86,10 @@ public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
   @Override
   default T get() {
     final List<T> list = list();
-    if (list.size() == 0) {
+    if (list.isEmpty()) {
       return null;
     }
-    return list.get(0);
+    return list.getFirst();
   }
 
   /**
@@ -97,10 +97,10 @@ public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
    */
   default Optional<T> single() {
     final List<T> list = list();
-    if (list.size() == 0) {
+    if (list.isEmpty()) {
       return Optional.empty();
     }
-    return Optional.ofNullable(list.get(0));
+    return Optional.ofNullable(list.getFirst());
   }
 
   /**
@@ -116,10 +116,10 @@ public interface ResultsHolder<T> extends Iterable<T>, Supplier<T> {
    */
   default T unique() {
     final List<T> list = list();
-    if (list.size() == 0) {
+    if (list.isEmpty()) {
       throw new IllegalStateException("Cannot obtain unique element of empty " + this);
     }
-    return list.get(0);
+    return list.getFirst();
   }
 
 
