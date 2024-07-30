@@ -54,20 +54,20 @@ public class TermApiTest {
     Term term;
     //
     term = Struct.valueOf("p", "X", 2);
-    logger.info("Flat terms: {}", termApi().collectTerms(term));
+    logger.debug("Flat terms: {}", termApi().collectTerms(term));
     //
     term = Struct.valueOf("a", new Struct<>("b"), "c");
-    logger.info("Flat terms: {}", termApi().collectTerms(term));
+    logger.debug("Flat terms: {}", termApi().collectTerms(term));
     //
     term = new Struct<>(Struct.FUNCTOR_CLAUSE, new Struct<>("a", Struct.valueOf("p", "X", "Y")), Struct.valueOf("p", "X", "Y"));
-    logger.info("Flat terms: {}", termApi().collectTerms(term));
+    logger.debug("Flat terms: {}", termApi().collectTerms(term));
     //
     final Term clause = new Struct<>(Struct.FUNCTOR_CLAUSE, new Struct<>("a", Struct.valueOf("p", "X", "Y")), Struct.valueOf("p", "X", "Y"));
-    logger.info("Flat terms of original {}", termApi().collectTerms(clause));
+    logger.debug("Flat terms of original {}", termApi().collectTerms(clause));
     final Object t2 = termApi().normalize(clause);
-    logger.info("Found {} bindings", ((Struct<?>) t2).getIndex());
+    logger.debug("Found {} bindings", ((Struct<?>) t2).getIndex());
     assertThat(((Struct<?>) t2).getIndex()).isEqualTo(2);
-    logger.info("Flat terms of copy     {}", termApi().collectTerms(t2));
+    logger.debug("Flat terms of copy     {}", termApi().collectTerms(t2));
     assertThat(t2.toString()).isEqualTo(clause.toString());
   }
 
