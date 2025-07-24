@@ -6,7 +6,7 @@
 
   <groupId>org.logic2j</groupId>
   <artifactId>logic2j-api</artifactId>
-  <version>1.3.0</version>
+  <version>1.3.1-SNAPSHOT</version>
 
   <properties>
     <slf4j-api.version>2.0.17</slf4j-api.version>
