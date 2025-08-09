@@ -336,6 +336,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
   @Override
   public String toString() {
     if (logger.isDebugEnabled()) {
+      // TODO As this is the sole usage of slf4j we could challenge this pattern of using the logger's level to determine the degree of details of toString()...
       return this.getName() + '#' + this.getIndex();
     }
     return this.name;

@@ -17,19 +17,18 @@
 
 package org.logic2j.engine.model;
 
+import org.junit.Test;
+import org.logic2j.engine.exception.InvalidTermException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.logic2j.engine.model.TermApiLocator.termApi;
 import static org.logic2j.engine.model.Var.anon;
 import static org.logic2j.engine.model.Var.anyVar;
 
-import org.junit.Test;
-import org.logic2j.engine.exception.InvalidTermException;
-
 /**
  * Low-level tests of the {@link TermApi} facade.
  */
 public class TermApiTest {
-  private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(TermApiTest.class);
   private static final TermApi TERM_API = termApi();
 
   @Test
@@ -54,20 +53,32 @@ public class TermApiTest {
     Term term;
     //
     term = Struct.valueOf("p", "X", 2);
-    logger.debug("Flat terms: {}", termApi().collectTerms(term));
+    assertThat(termApi().collectTerms(term)).containsExactly(new Var(String.class, "X"), 2);
+
     //
     term = Struct.valueOf("a", new Struct<>("b"), "c");
-    logger.debug("Flat terms: {}", termApi().collectTerms(term));
+    assertThat(termApi().collectTerms(term)).containsExactly(new Struct("b"), "c");
+
     //
     term = new Struct<>(Struct.FUNCTOR_CLAUSE, new Struct<>("a", Struct.valueOf("p", "X", "Y")), Struct.valueOf("p", "X", "Y"));
-    logger.debug("Flat terms: {}", termApi().collectTerms(term));
+
+    final Var x = new Var(String.class, "X");
+    final Var y = new Var(String.class, "Y");
+    assertThat(termApi().collectTerms(term)).containsExactly(
+          x,
+          y,
+          new Struct("p", x, y),
+          new Struct("a", new Struct("p", x, y)),
+          x,
+          y,
+          new Struct("p", x, y)
+    );
+
     //
     final Term clause = new Struct<>(Struct.FUNCTOR_CLAUSE, new Struct<>("a", Struct.valueOf("p", "X", "Y")), Struct.valueOf("p", "X", "Y"));
-    logger.debug("Flat terms of original {}", termApi().collectTerms(clause));
     final Object t2 = termApi().normalize(clause);
-    logger.debug("Found {} bindings", ((Struct<?>) t2).getIndex());
     assertThat(((Struct<?>) t2).getIndex()).isEqualTo(2);
-    logger.debug("Flat terms of copy     {}", termApi().collectTerms(t2));
+
     assertThat(t2.toString()).isEqualTo(clause.toString());
   }
 
