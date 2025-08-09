@@ -186,7 +186,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
    * Copy constructor
    * Clones the name and the index.
    *
-   * @param original
+   * @param original Variable to copy
    * @throws InvalidTermException If you try to clone the anonymous variable!
    */
   public static <Q> Var<Q> copy(Var<Q> original) {
@@ -255,7 +255,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
   /**
    * Just add this to collectedTerms and set Term#index to {@link Term#NO_INDEX}.
    *
-   * @param collectedTerms
+   * @param collectedTerms Target collection to be filled
    */
   void collectTermsInto(Collection<Object> collectedTerms) {
     clearIndex();
@@ -282,7 +282,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
   }
 
   /**
-   * @param theOther
+   * @param theOther variable to compare to
    * @return true only when references are the same, otherwise two distinct {@link Var}s will always be considered different, despite
    * their name, index, or whatever.
    */
@@ -345,7 +345,7 @@ public class Var<T> extends Term implements Binding<T>, Comparable<Var<T>> {
   /**
    * Just to allow ordering of Var, by their name
    *
-   * @param that
+   * @param that variable to compare to
    * @return Comparison based on #getName()
    */
   @Override
